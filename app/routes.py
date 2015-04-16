@@ -1,6 +1,6 @@
 # CS421 Project
 # Hareesh Nagaraj, Thomas Gill, Joe Soultanis
-# Routes file
+# Routes file for web app
 from flask import Flask, render_template
 import psycopg2
 

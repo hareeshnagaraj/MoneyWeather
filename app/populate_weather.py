@@ -36,8 +36,22 @@ def populateWeather():
 def updateDB():
     with open(directory + 'nevada2001.csv', 'rb') as csvfile:
         spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
+        x = 0
         for row in spamreader:
-            print row[0]
+            if x > 0:
+                date = row[0]
+                dateparams = date.split("-")
+                print(dateparams)
+                year = dateparams[0]
+                month = dateparams[1]
+                day = dateparams[2]
+                meantemp = row[2]
+                humidity = row[8]
+                wind = row[17]
+                precipitation = row[19]
+                event = row[21]
+                print day + "/" + month + "/" + year + "  meantemp:" + meantemp + "  humidity:" + humidity + " event:" + event
+            x+=1
 
 
 def main():

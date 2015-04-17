@@ -19,6 +19,7 @@ urlp2 = "/3/2/CustomHistory.html?dayend=2&monthend=3&yearend=2015&req_city=&req_
 
 conn = psycopg2.connect(database="nagaraj_weather", user="nagaraj", password="nagaraj", host="localhost", port="63333")
 cur = conn.cursor() #used to perform ops on db
+conn.autocommit = True  #used to automatically commit updates to db
 
 def getURL(a,b,c,d):
     return a + b + "/" + str(c) + d
@@ -55,10 +56,10 @@ def updateDB():
                 cur.execute(prequery, (day,month,year,ZIP)) 
                 print(cur.rowcount)
                 if cur.rowcount == 0:
-                    cur.execute('INSERT INTO %s \
+                    cur.execute("""INSERT INTO weather \
                         (zip,month,year,mean_temp,precipitation,wind,humidity,event_type,event_severity,day) \
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', \
-                        (tablename, ZIP, month, year, meantemp, precipitation, wind, humidity, event, 0, day))
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""", \
+                        (ZIP, month, year, meantemp, precipitation, wind, humidity, event, '0', day,))
                 x+=1
                 # print day + "/" + month + "/" + year + "  meantemp:" + meantemp + "  humidity:" + humidity + " event:" + event
             x+=1
@@ -68,9 +69,7 @@ def main():
     print("Hi, it's time to grab some weather data!")
     print("Make sure you have the DB connected and configured")
     print("as well as the appropriate airport code - any mistakes will result in a cluttered database")
-    # updateDB()
-    
-    
+    updateDB()
 
 # Useful stuff: SQL select with params
 # SQL = "SELECT * FROM weather WHERE day = %s AND month = %s AND year = %s"
@@ -80,6 +79,9 @@ def main():
 # data = ("O'Reilly", )
 # cur.execute(SQL, (day,month,year))
 
+
+# Functioning insert query:
+# cur.execute("""INSERT INTO commodity (commodityname,unit_measure) VALUES (%s,%s)""",('42','34',))
 
 
 main()

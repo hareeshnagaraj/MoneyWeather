@@ -25,7 +25,7 @@ def getURL(a,b,c,d):
     return a + b + "/" + str(c) + d
 
 def populateWeatherCSV():
-    year = 2000
+    year = 2004
     while(year < 2015):
         url = getURL(urlp1,airport,year,urlp2)
         csv = urllib2.urlopen(url)
@@ -33,7 +33,7 @@ def populateWeatherCSV():
         output = open(directory + filename,'wb')
         output.write(csv.read())
         output.close()
-        updateDB(directoryAndfilename)
+        updateDB(directory + filename)
         year += 1
 
 
@@ -44,24 +44,33 @@ def updateDB(directoryAndfilename):
         spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
         x = 0
         for row in spamreader:
-            if x > 0:
+            if x > 1:
                 date = row[0]
                 dateparams = date.split("-")
                 year = dateparams[0]
                 month = dateparams[1]
                 day = dateparams[2]
                 meantemp = row[2]
+                if meantemp == '':
+                    meantemp = '-1'
                 humidity = row[8]
+                if humidity == '':
+                    humidity = '-1'
                 wind = row[17]
+                if wind == '':
+                    wind = '-1'
                 precipitation = row[19]
                 event = row[21]
                 cur.execute(prequery, (day,month,year,ZIP)) 
-                print(cur.rowcount)
+                print(cur.rowcount) 
                 if cur.rowcount == 0:
-                    cur.execute("""INSERT INTO weather \
-                        (zip,day,month,year,mean_temp,precipitation,wind,humidity,event_type,event_severity) \
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""", \
-                        (ZIP,day, month, year, meantemp, precipitation, wind, humidity, event, '0',))
+                    try:
+                        cur.execute("""INSERT INTO weather \
+                            (zip,day,month,year,mean_temp,precipitation,wind,humidity,event_type,event_severity) \
+                            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""", \
+                            (ZIP,day, month, year, meantemp, precipitation, wind, humidity, event, '0',))
+                    except Exception:
+                        pass
                 x+=1
                 # print day + "/" + month + "/" + year + "  meantemp:" + meantemp + "  humidity:" + humidity + " event:" + event
             x+=1
@@ -71,7 +80,7 @@ def main():
     print("Hi, it's time to grab some weather data!")
     print("Make sure you have the DB connected and configured")
     print("as well as the appropriate airport code - any mistakes will result in a cluttered database")
-    updateDB()
+    populateWeatherCSV()
 
 # Useful stuff: SQL select with params
 # SQL = "SELECT * FROM weather WHERE day = %s AND month = %s AND year = %s"

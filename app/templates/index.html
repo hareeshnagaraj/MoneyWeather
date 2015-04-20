@@ -22,7 +22,7 @@
     </div>
   </nav>
 
-  <div id="index-banner" class="parallax-container">
+  <div id="index-banner" class="parallax-container" style="overflow:visible">
     <div class="section no-pad-bot">
       <div class="container">
         <br><br>
@@ -31,7 +31,20 @@
           <h5 class="header col s12 light white-text">a graphical tool to compare weather and commodity prices</h5>
         </div>
         <div class="row center">
-          <a href="http://materializecss.com/getting-started.html" id="download-button" class="btn-large waves-effect waves-light green lighten-1">Get Started</a>
+          <!-- Dropdown Trigger -->
+          <a class='dropdown-button btn green' href='#' data-activates='dropdown1'>Get Started</a>
+
+          <!-- Dropdown Structure -->
+          <ul id='dropdown1' class='dropdown-content'>
+            <li><a href="#!">Corn</a></li>
+            <li><a href="#!">Silver</a></li>
+            <li><a href="/gold">Gold</a></li>
+            <li><a href="#!">Wheat</a></li>
+            <li><a href="#!">Crude Oil</a></li>
+            <li><a href="#!">Natural Gas</a></li>
+            <li><a href="#!">Coffee</a></li>
+            <li><a href="#!">Plastic</a></li>
+          </ul>
         </div>
         <br><br>
 
@@ -57,7 +70,7 @@
   <footer class="page-footer green">
     <div class="footer-copyright green">
       <div class="container">
-      Made by <a class="white-text text-lighten-3" href="http://materializecss.com">Hareesh Nagaraj</a>, <a class="white-text text-lighten-3" href="http://materializecss.com">Joe Soultanis</a>, <a class="white-text text-lighten-3" href="http://materializecss.com">Thomas Gill</a>
+      Made by <a target="_blank" class="white-text text-lighten-3" href="https://github.com/hareeshnagaraj">Hareesh Nagaraj</a>, <a target="_blank" class="white-text text-lighten-3" href="https://github.com/jpsoultanis?tab=repositories">Joe Soultanis</a>, <a target="_blank" class="white-text text-lighten-3" href="http://materializecss.com">Thomas Gill</a>
       </div>
     </div>
   </footer>

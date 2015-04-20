@@ -14,8 +14,13 @@ app = Flask(__name__)
  
 @app.route('/')
 def home():
-  print("hi")
+  print("home page rendering")
   return render_template('index.html')
+
+@app.route('/gold')
+def tool():
+  print("tool page rendering")
+  return render_template('gold.html')
 
 if __name__ == '__main__':
   app.run(debug=True)

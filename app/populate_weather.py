@@ -1,4 +1,4 @@
-#This app is used to populate the weather portion of our database
+#This script is used to populate the weather portion of our database
 
 #URL FORMAT
 # urlp1 = "http://www.wunderground.com/history/airport/KEKO/2000/3/2/CustomHistory.html?dayend=2&monthend=3&yearend=2015&req_city=&req_state=&req_statename=&reqdb.zip=&reqdb.magic=&reqdb.wmo=&format=1"

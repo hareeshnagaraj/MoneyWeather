@@ -5,8 +5,7 @@ Mostly in jQuery, just for simplicity
 */
 
 //Function to be called from the template
-
-function GenerateUI( commodity, zipList )
+function GenerateUI( commodityInput, zipList )
     {
         var from_month = "Month";
         var from_year = "Year";
@@ -43,13 +42,17 @@ function GenerateUI( commodity, zipList )
                 window.alert("Please enter a valid time range");
                 return ;
             }
-
             console.log("Valid time range"); 
             //Sending request for data to server -- 
             $.ajax({
                 method : "POST",
-                url : "/weatherdata",
+                url : "/pagedata",
                 data : {
+                    commodity : commodityInput,
+                    from_month : from_month,
+                    from_year : from_year,
+                    to_month : to_month,
+                    to_year : to_year, 
                     zipCodes : zipList
                 }, 
                 success: function(data){

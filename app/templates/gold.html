@@ -2,3 +2,14 @@
 {% block title %}
 Gold
 {% endblock %}  
+
+<!-- Calling hte UI parameters appropriately  -->
+{% block UIComponent %}
+<script>
+    $(document).ready(function(){
+      GenerateUI("gold",{{zipList}})
+    })
+</script>
+<script src="{{ url_for('static', filename='js/commodity.js') }}">
+</script>
+{% endblock %}  

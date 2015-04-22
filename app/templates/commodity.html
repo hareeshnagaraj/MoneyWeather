@@ -48,7 +48,7 @@
             <li><a href="#!">12</a></li>
           </ul>
 
-          <a id="from_year_label" class='left-align dropdown-button btn green' href='#' data-activates='from_year'> Year </a>
+          <a id="from_year_label" class='left-align dropdown-button btn green' href='#' data-activates='from_year'>Year</a>
           <!-- Dropdown Structure -->
           <ul id='from_year' class='dropdown-content' style="height:300px!important;overflow:scroll;">
             <li><a href="#!">2000</a></li>
@@ -86,7 +86,7 @@
             <li><a href="#!">12</a></li>
           </ul>
 
-          <a id="to_year_label" class='left-align dropdown-button btn green' href='#' data-activates='to_year'> Year </a>
+          <a id="to_year_label" class='left-align dropdown-button btn green' href='#' data-activates='to_year'>Year</a>
           <!-- Dropdown Structure -->
           <ul id='to_year' class='dropdown-content'>
             <li><a href="#!">2000</a></li>
@@ -106,8 +106,12 @@
             <li><a href="#!">2014</a></li>
             <li><a href="#!">2015</a></li>
           </ul>
+          &nbsp &nbsp &nbsp
+          <a id="generateButton" class="waves-effect waves-light btn green">Generate</a>
         </div>
+
         <br><br>
+
       </div>
   </div>
 
@@ -128,8 +132,9 @@
   <!-- Compiled and minified JavaScript -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/js/materialize.min.js"></script>
   
-  <!-- Test Script -->
-  <script src="{{ url_for('static', filename='js/commodity.js') }}"></script>
+  
+  {% block UIComponent %}
+  {% endblock %}
 
   </body>
 </html>

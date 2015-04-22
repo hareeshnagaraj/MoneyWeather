@@ -17,9 +17,14 @@ def home():
   print("home page rendering")
   return render_template('index.html')
 
+# This grabs the data necessary for the gold page, averages it monthly
 @app.route('/gold')
 def tool():
   print("tool page rendering")
+  queryOne = "SELECT zip FROM location WHERE commodityName = 'gold'";
+  cur = conn.cursor()
+  cur.execute(queryOne)
+  print(cur.fetchall())
   return render_template('gold.html')
 
 if __name__ == '__main__':

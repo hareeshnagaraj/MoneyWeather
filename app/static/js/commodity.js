@@ -44,6 +44,24 @@ function GenerateUI( commodity, zipList )
                 return ;
             }
 
-            console.log("Valid time range");
+            console.log("Valid time range"); 
+            //Sending request for data to server -- 
+            $.ajax({
+                method : "POST",
+                url : "/weatherdata",
+                data : {
+                    zipCodes : zipList
+                }, 
+                success: function(data){
+                    console.log("success")
+                    console.log(data);
+                },
+                error: function(data){
+                    console.log("error")
+                    console.log(data);
+                }
+
+            });
+
         });
  }

@@ -1,7 +1,7 @@
 # CS421 Project
 # Hareesh Nagaraj, Thomas Gill, Joe Soultanis
 # Routes file for web app
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import psycopg2
 
 
@@ -29,9 +29,17 @@ def tool():
   zipCodes = cur.fetchall()[0]
   zipCodesList = []
   for code in zipCodes:
-    print(code)
     zipCodesList.append(code)
+  print(zipCodesList)
   return render_template('gold.html',zipList = zipCodesList)
+
+@app.route('/weatherdata',methods=['POST'])
+def weatherdata():
+  print("weather request -- ")
+  zipCodes = request.form.getlist('zipCodes[]')
+  for code in zipCodes:
+    print(code)
+  return("hi")
 
 if __name__ == '__main__':
   app.run(debug=True)

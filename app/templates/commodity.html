@@ -31,7 +31,7 @@
     <div class="row">
           <!-- Dropdown Trigger -->
           <h5>From:</h5>
-          <a class='left-align dropdown-button btn green' href='#' data-activates='from_month'>Month</a>
+          <a id="from_month_label" class='left-align dropdown-button btn green' href='#' data-activates='from_month'>Month</a>
           <!-- Dropdown Structure -->
           <ul id='from_month' class='dropdown-content'>
             <li><a href="#!">1</a></li>
@@ -48,7 +48,7 @@
             <li><a href="#!">12</a></li>
           </ul>
 
-          <a class='left-align dropdown-button btn green' href='#' data-activates='from_year'> Year </a>
+          <a id="from_year_label" class='left-align dropdown-button btn green' href='#' data-activates='from_year'> Year </a>
           <!-- Dropdown Structure -->
           <ul id='from_year' class='dropdown-content' style="height:300px!important;overflow:scroll;">
             <li><a href="#!">2000</a></li>
@@ -69,7 +69,7 @@
             <li><a href="#!">2015</a></li>
           </ul>
           <h5>To:</h5>
-          <a class='left-align dropdown-button btn green' href='#' data-activates='to_month'>Month</a>
+          <a id="to_month_label" class='left-align dropdown-button btn green' href='#' data-activates='to_month'>Month</a>
           <!-- Dropdown Structure -->
           <ul id='to_month' class='dropdown-content'>
             <li><a href="#!">1</a></li>
@@ -86,7 +86,7 @@
             <li><a href="#!">12</a></li>
           </ul>
 
-          <a class='left-align dropdown-button btn green' href='#' data-activates='to_year'> Year </a>
+          <a id="to_year_label" class='left-align dropdown-button btn green' href='#' data-activates='to_year'> Year </a>
           <!-- Dropdown Structure -->
           <ul id='to_year' class='dropdown-content'>
             <li><a href="#!">2000</a></li>
@@ -121,12 +121,15 @@
 
 
   <!--  Scripts-->
-    <!-- External Resources -->
+  <!-- External Resources -->
   <!-- Compiled and minified CSS -->
   <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/css/materialize.min.css">
   <!-- Compiled and minified JavaScript -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/js/materialize.min.js"></script>
+  
+  <!-- Test Script -->
+  <script src="{{ url_for('static', filename='js/commodity.js') }}"></script>
 
   </body>
 </html>

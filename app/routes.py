@@ -18,14 +18,20 @@ def home():
   return render_template('index.html')
 
 # This grabs the data necessary for the gold page, averages it monthly
+# the template is routed with the appropriate locations, that are to be
+# queried asynchronously inside the UI
 @app.route('/gold')
 def tool():
   print("tool page rendering")
   queryOne = "SELECT zip FROM location WHERE commodityName = 'gold'";
   cur = conn.cursor()
   cur.execute(queryOne)
-  print(cur.fetchall())
-  return render_template('gold.html')
+  zipCodes = cur.fetchall()[0]
+  zipCodesList = []
+  for code in zipCodes:
+    print(code)
+    zipCodesList.append(code)
+  return render_template('gold.html',zipList = zipCodesList)
 
 if __name__ == '__main__':
   app.run(debug=True)

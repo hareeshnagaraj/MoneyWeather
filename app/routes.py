@@ -50,8 +50,8 @@ def weatherdata():
   print(to_year)
   for code in zipCodes:
     print(code)
-    try:
-      cur.execute("""SELECT AVG(mean_temp) FROM weather WHERE zip=%s GROUP BY year""", (code, ))
+    try:  #TODO - double check and make sure that this is an accurate query - it should be but worth checking
+      cur.execute("""SELECT AVG(mean_temp) FROM weather WHERE zip=%s GROUP BY year, month""", (code, ))
     except Exception:
       print(Exception)
       print("query error")

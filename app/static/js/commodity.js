@@ -96,6 +96,7 @@ var line2 = d3.svg.line()
 
     //adding axis labels 
     graph.append("text")
+        .attr("class","weatherAxis")
         .attr("transform", "rotate(-90)")
         .attr("y", 0 - m[0])
         .attr("x",0 - (h / 2))
@@ -282,6 +283,62 @@ function d3update( data , from_month, from_year, to_month, to_year){
         .duration(750)
         .attr("d", line2(priceDataPoints));
 
+
+    //Button listeners to update data dynamically
+    //unbinding click listeners
+    $("#meanprecip").unbind("click");
+    $("#meanhumidity").unbind("click");
+    $("#meantemp").unbind("click");
+
+    //Enabling precip, humidity buttons
+    $("#meanprecip").removeClass("disabled");
+    $("#meanhumidity").removeClass("disabled");
+    $("#meanprecip").addClass("green");
+    $("#meanhumidity").addClass("green");
+
+
+    //click handlers to switch data and button colors
+    $("#meanhumidity").click(function(){
+        $("#meanhumidity").removeClass("green");
+        $("#meanhumidity").addClass("disabled");
+        $("#meanprecip").removeClass("disabled");
+        $("#meanprecip").addClass("green");
+        $("#meantemp").removeClass("disabled");
+        $("#meantemp").addClass("green");
+
+        svg = d3.select("#graph").transition();
+        svg.select(".weatherAxis") // change the left y axis domain
+            .duration(750)
+            .text("Mean Humidity");
+    });
+
+    $("#meanprecip").click(function(){
+        $("#meanprecip").removeClass("green");
+        $("#meanprecip").addClass("disabled");
+        $("#meanhumidity").removeClass("disabled");
+        $("#meanhumidity").addClass("green");
+        $("#meantemp").removeClass("disabled");
+        $("#meantemp").addClass("green");
+
+        svg = d3.select("#graph").transition();
+        svg.select(".weatherAxis") // change the left y axis domain
+            .duration(750)
+            .text("Mean Precipitation");
+    });
+
+    $("#meantemp").click(function(){
+        $("#meantemp").removeClass("green");
+        $("#meantemp").addClass("disabled");
+        $("#meanhumidity").removeClass("disabled");
+        $("#meanhumidity").addClass("green");
+        $("#meanprecip").removeClass("disabled");
+        $("#meanprecip").addClass("green");
+        
+        svg = d3.select("#graph").transition();
+        svg.select(".weatherAxis") // change the left y axis domain
+            .duration(750)
+            .text("Mean Temperature");
+    });
 
 }
 

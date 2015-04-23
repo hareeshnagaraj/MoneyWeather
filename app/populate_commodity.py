@@ -19,7 +19,7 @@ def populateGold():
     if cur.rowcount == 0:   #insert gold into the commodity database if not present
         print("Adding gold to the commodity table")
         cur.execute("""INSERT INTO commodity (commodityname,unit_measure) VALUES (%s,%s)""",('gold','troy ounce',))
-    prequery = "SELECT * FROM weather WHERE day = %s AND month = %s AND year = %s"
+    prequery = "SELECT * FROM commodity_price WHERE commodityname = 'gold' AND day = %s AND month = %s AND year = %s"
     with open('data/commodities/gold_prices.csv', 'rb') as csvfile:
         spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
         x = 0
@@ -32,15 +32,17 @@ def populateGold():
                 month = dateparams[1]
                 day = dateparams[2]
                 cur.execute(prequery, (day,month,year))
-                print(cur.rowcount)  
+                # print(cur.rowcount)  
                 # print(row)
                 if cur.rowcount == 0:
                     try:
-                        cur.execute("""INSERT INTO weather \
-                            (zip,day,month,year,mean_temp,precipitation,wind,humidity,event_type,event_severity) \
-                            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""", \
-                            (ZIP,day, month, year, meantemp, precipitation, wind, humidity, event, '0',))
+                        cur.execute("""INSERT INTO commodity_price \
+                            (commodityname,month,year,price,day) \
+                            VALUES (%s, %s, %s, %s, %s)""", \
+                            ("gold",month,year,price,day,))
                     except Exception:
+                        print("ERROR")
+                        return ;
                         pass
             x += 1
 

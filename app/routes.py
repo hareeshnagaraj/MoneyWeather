@@ -1,12 +1,18 @@
 # CS421 Project
 # Hareesh Nagaraj, Thomas Gill, Joe Soultanis
 # Routes file for web app
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import psycopg2
 
 
 #THIS IS THE CONNECTION TO THE CS COMP DATABASE ASSUMING LOCAL PORT
 #PORT VALUE NEEDS TO BE CHANGED FOR DEPLOYMENT
+DEC2FLOAT = psycopg2.extensions.new_type(
+    psycopg2.extensions.DECIMAL.values,
+    'DEC2FLOAT',
+    lambda value, curs: float(value) if value is not None else None)
+
+psycopg2.extensions.register_type(DEC2FLOAT)
 conn = psycopg2.connect(database="nagaraj_weather", user="nagaraj", password="nagaraj", host="localhost", port="63333")
 cur = conn.cursor() #used to perform ops on db
 
@@ -33,6 +39,10 @@ def tool():
   print(zipCodesList)
   return render_template('gold.html',zipList = zipCodesList)
 
+#Sends the weather data and commodity price back to commodity.js
+#format for each zip code : mean_temp, mean_precipitation, mean_humidity, month, year (aggregated by month)
+#format for commodity price : mean_price, month, year (aggregated by month)
+#NOTE - the data does not cut off between months, that needs to be done in in the javascript
 @app.route('/pagedata',methods=['POST'])
 def weatherdata():
 	print("weather request -- ")
@@ -48,25 +58,22 @@ def weatherdata():
 	print(from_year)
 	print(to_month)
 	print(to_year)
+	data = {}
+	data['weather'] = {}
 	for code in zipCodes:
-		print(code)
-		# try:  #TODO - double check and make sure that this is an accurate query - it should be, but worth checking
-		# NOTE : range must be determined INSIDE the APP 
 		cur.execute("""SELECT AVG(a.mean_temp),AVG(a.precipitation), AVG(a.humidity), a.month,a.year \
 			FROM weather a\
-			 WHERE ((a.year <= %s AND a.year >= %s)) GROUP BY a.month,a.year ORDER BY a.year, a.month
-		""", (to_year,from_year))
-
-		x = 0
-		for a in cur.fetchall():
-			print(a)
-		x += 1
-		print("total rows : " + str(x))
-		# except Exception:
-		#   print(Exception)
-		#   print("query error")
-		#   pass
-	return("hi")
+			 WHERE ((a.zip = %s AND a.year <= %s AND a.year >= %s)) GROUP BY a.month,a.year ORDER BY a.year, a.month\
+		""", (code, to_year,from_year))
+		data['weather'][code] = cur.fetchall()
+	# print(weatherDict)
+	
+	cur.execute("""SELECT AVG(price), month, year FROM commodity_price\
+			 WHERE ((commodityname = %s AND year <= %s AND year >= %s)) GROUP BY month,year ORDER BY year, month
+		""", ("gold",to_year,from_year))
+	data['commodityPrice'] = cur.fetchall()
+	print(data)
+	return jsonify(packet=data)
 
 if __name__ == '__main__':
   app.run(debug=True)

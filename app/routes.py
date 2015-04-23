@@ -51,7 +51,18 @@ def weatherdata():
   for code in zipCodes:
     print(code)
     try:  #TODO - double check and make sure that this is an accurate query - it should be but worth checking
-      cur.execute("""SELECT AVG(mean_temp) FROM weather WHERE zip=%s GROUP BY year, month""", (code, ))
+      cur.execute("""SELECT AVG(mean_temp), AVG(wind), AVG(humidity) FROM weather WHERE\
+       (zip=%s AND month > %s AND year > %s) \
+       GROUP BY year, month EXCEPT
+       SELECT AVG(mean_temp), AVG(wind), AVG(humidity) FROM weather WHERE\
+       (zip=%s AND month > %s AND year > %s) \
+       GROUP BY year, month
+       """, (code, from_month, from_year, code, to_month, to_year, ))
+      x = 1
+      for a in cur.fetchall():
+        print(a)
+        x += 1
+      print("total rows : " + str(x))
     except Exception:
       print(Exception)
       print("query error")

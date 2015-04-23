@@ -1,7 +1,6 @@
 /*
 JavaScript that defines the UI element interactions on the page
 Mostly in jQuery, just for simplicity
-
 */
 
 /**********PLACEHOLDER GRAPH**************/
@@ -175,9 +174,11 @@ function d3update( data , from_month, from_year, to_month, to_year){
     var meanTempData = [];
     var meanPrecipData = [];
     var meanHumidityData = [];
+    var priceDataPoints = [];
     var temp, precipitation, humidity, month, year;
 
     var maxMeanTemp = 0;
+    var maxPrice = 0;
 
     //Aggregating weather for each zipcode
     for(var zipcode in weather){
@@ -206,17 +207,35 @@ function d3update( data , from_month, from_year, to_month, to_year){
 
             numZips++;
         }
+        console.log("final weather data")
         console.log(xLabels);
         console.log(meanTempData);
         console.log(meanPrecipData);
         console.log(meanHumidityData);
     }
 
+    console.log("commodity price data gathering --");
+    for(var i = 0; i < commodityPrice.length; i++){
+        console.log(commodityPrice[i])
+        pricePoint = commodityPrice[i];
+        price = cutoffDecimal(pricePoint[0]);
+        month = pricePoint[1];
+        year = pricePoint[2];
+        if(year == to_year && month > to_month){ break; }
+        if((year == from_year && month >= from_month) || (year > from_year)){
+            if(price > maxPrice)
+                maxPrice = price            //updating maximum price for right y axis
+            priceDataPoints.push(price);
+        }
+    }
+
     //Updating the d3 graph appropriately 
     x = d3.scale.linear().domain([0, xLabels.length]).range([0, w]);    //x axis represents months since start
-    y1 = d3.scale.linear().domain([0, maxMeanTemp]).range([h, 0]);               //updating the left axis with meantemp
+    y1 = d3.scale.linear().domain([0, maxMeanTemp]).range([h, 0]);      //updating the left axis with meantemp
+    y2 = d3.scale.linear().domain([0, maxPrice]).range([h, 0]);         //updating right axis with price
     xAxis = d3.svg.axis().scale(x).tickSize(-h).tickSubdivide(false);
-    yAxisLeft = d3.svg.axis().scale(y1).ticks(4).orient("left");
+    yAxisLeft = d3.svg.axis().scale(y1).ticks(10).orient("left");
+    yAxisRight = d3.svg.axis().scale(y2).ticks(10).orient("right");
     // Select the section we want to apply our changes to
     svg = d3.select("#graph").transition();
     
@@ -227,6 +246,10 @@ function d3update( data , from_month, from_year, to_month, to_year){
     svg.select(".y.axis.axisLeft") // change the left y axis
         .duration(750)
         .call(yAxisLeft);
+
+    svg.select(".y.axis.axisRight") // change the right y axis
+        .duration(750)
+        .call(yAxisRight);
 
     graph.append("text")      // text label for the x axis
         .attr("x", 300 )

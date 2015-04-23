@@ -35,39 +35,38 @@ def tool():
 
 @app.route('/pagedata',methods=['POST'])
 def weatherdata():
-  print("weather request -- ")
-  print(request.form)
-  zipCodes = request.form.getlist('zipCodes[]')
-  commodity = request.form.get('commodity')
-  from_month = request.form.get('from_month')
-  from_year = request.form.get('from_year')
-  to_month = request.form.get('to_month')
-  to_year = request.form.get('to_year')
-  print(commodity)
-  print(from_month)
-  print(from_year)
-  print(to_month)
-  print(to_year)
-  for code in zipCodes:
-    print(code)
-    try:  #TODO - double check and make sure that this is an accurate query - it should be but worth checking
-      cur.execute("""SELECT AVG(mean_temp), AVG(wind), AVG(humidity) FROM weather WHERE\
-       (zip=%s AND month > %s AND year > %s) \
-       GROUP BY year, month EXCEPT
-       SELECT AVG(mean_temp), AVG(wind), AVG(humidity) FROM weather WHERE\
-       (zip=%s AND month > %s AND year > %s) \
-       GROUP BY year, month
-       """, (code, from_month, from_year, code, to_month, to_year, ))
-      x = 1
-      for a in cur.fetchall():
-        print(a)
-        x += 1
-      print("total rows : " + str(x))
-    except Exception:
-      print(Exception)
-      print("query error")
-      pass
-  return("hi")
+	print("weather request -- ")
+	print(request.form)
+	zipCodes = request.form.getlist('zipCodes[]')
+	commodity = request.form.get('commodity')
+	from_month = request.form.get('from_month')
+	from_year = request.form.get('from_year')
+	to_month = request.form.get('to_month')
+	to_year = request.form.get('to_year')
+	print(commodity)
+	print(from_month)
+	print(from_year)
+	print(to_month)
+	print(to_year)
+	for code in zipCodes:
+		print(code)
+		# try:  #TODO - double check and make sure that this is an accurate query - it should be, but worth checking
+		# NOTE : range must be determined INSIDE the APP 
+		cur.execute("""SELECT AVG(a.mean_temp),AVG(a.precipitation), AVG(a.humidity), a.month,a.year \
+			FROM weather a\
+			 WHERE ((a.year <= %s AND a.year >= %s)) GROUP BY a.month,a.year ORDER BY a.year, a.month
+		""", (to_year,from_year))
+
+		x = 0
+		for a in cur.fetchall():
+			print(a)
+		x += 1
+		print("total rows : " + str(x))
+		# except Exception:
+		#   print(Exception)
+		#   print("query error")
+		#   pass
+	return("hi")
 
 if __name__ == '__main__':
   app.run(debug=True)

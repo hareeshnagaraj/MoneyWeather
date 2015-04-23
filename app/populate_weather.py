@@ -25,7 +25,7 @@ def getURL(a,b,c,d):
     return a + b + "/" + str(c) + d
 
 def populateWeatherCSV():
-    year = 2004
+    year = 2000
     while(year < 2015):
         url = getURL(urlp1,airport,year,urlp2)
         csv = urllib2.urlopen(url)

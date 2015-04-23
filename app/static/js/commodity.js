@@ -66,7 +66,7 @@ var line2 = d3.svg.line()
           .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
     // create yAxis
-    var xAxis = d3.svg.axis().scale(x).tickSize(-h).tickSubdivide(true);
+    var xAxis = d3.svg.axis().scale(x).tickSize(-h).tickSubdivide(false);
     // Add the x-axis.
     graph.append("svg:g")
           .attr("class", "x axis")
@@ -149,8 +149,8 @@ function GenerateUI( commodityInput, zipList )
                     zipCodes : zipList
                 }, 
                 success: function(data){
-                    console.log("success")
                     console.log(data);
+                    d3update(data, from_month, from_year, to_month, to_year);
                 },
                 error: function(data){
                     console.log("error")
@@ -161,3 +161,48 @@ function GenerateUI( commodityInput, zipList )
 
         });
  }
+
+//Function to update the d3js UI appropriately
+//Time bounds are passed in here to simplify routes.py
+
+function d3update( data , from_month, from_year, to_month, to_year){
+    var xLabels = [];                              //this will be defined by the valid weather data range
+    var weather = data['packet']['weather'];      //weather data sent from server
+    var commodityPrice = data['packet']['commodityPrice'];      //commodity price
+    var numZips = 0;                                //Used to average out weather data if multiple zips present
+    var meanTempData = [];
+    for(var zipcode in weather){
+        zipweather = weather[zipcode];      //Getting weather for a specific month
+        for(var i = 0; i < zipweather.length; i++){
+            point = zipweather[i];
+            //Dealing with the X labels, defined by weather points NOT commodity
+            temp = cutoffDecimal(point[0]);
+            precipitation = point[1]
+            humidity = point[2]
+            month = point[3];
+            year = point[4]
+            dateString = point[3].toString() + "-" + point[4].toString();
+            if(year == to_year && month > to_month){ break; }
+
+            if((year == from_year && month >= from_month) || (year > from_year)){   //If statement 
+                xLabels.push(dateString);
+                meanTempData.push(temp);
+            }
+            // else if (year > from_year){
+            //     xLabels.push(dateString);
+            //     meanTempData.push(temp);
+            // }
+            
+            
+            numZips++;
+        }
+        console.log(xLabels);
+        console.log(meanTempData)
+    }
+}
+
+function cutoffDecimal(figure, decimals){
+    if (!decimals) decimals = 2;
+    var d = Math.pow(10,decimals);
+    return (parseInt(figure*d)/d).toFixed(decimals);
+};

@@ -7,6 +7,58 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
   <title>MoneyWeather</title>
+  <style>
+  /* tell the SVG path to be a thin blue line without any area fill */
+      path {
+        stroke-width: 1;
+        fill: none;
+      }
+      
+      .data1 {
+        stroke: steelblue;
+      }
+
+      .data2 {
+        stroke: orange;
+      }
+
+      .axis {
+        shape-rendering: crispEdges;
+      }
+
+      .x.axis line {
+        stroke: lightgrey;
+      }
+
+      .x.axis .minor {
+        stroke-opacity: .5;
+      }
+
+      .x.axis path {
+        display: none;
+      }
+      
+      .x.axis text {
+        font-size: 14;
+      }
+
+      .y.axis line, .y.axis path {
+        fill: none;
+        stroke: #000;
+      }
+
+      .y.axis text {
+        font-size: 14;
+      }
+
+      .y.axisRight text {
+        fill: orange;
+      }
+      
+      .y.axisLeft text {
+        fill: steelblue;
+      }
+      </style>
 </head>
 <body>
   <nav class="green" role="navigation">
@@ -112,6 +164,11 @@
 
         <br><br>
 
+      <div class="row">
+        <div id="graph" class="aGraph" style="float:left;"></div>
+      </div>
+      
+
       </div>
   </div>
 
@@ -131,7 +188,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/css/materialize.min.css">
   <!-- Compiled and minified JavaScript -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/js/materialize.min.js"></script>
-  
+  <script src="http://mbostock.github.com/d3/d3.v2.js"></script>
   
   {% block UIComponent %}
   {% endblock %}

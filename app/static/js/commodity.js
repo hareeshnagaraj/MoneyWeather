@@ -177,6 +177,8 @@ function d3update( data , from_month, from_year, to_month, to_year){
     var meanHumidityData = [];
     var temp, precipitation, humidity, month, year;
 
+    var maxMeanTemp = 0;
+
     //Aggregating weather for each zipcode
     for(var zipcode in weather){
         zipweather = weather[zipcode];      //Getting weather for a specific month
@@ -193,7 +195,9 @@ function d3update( data , from_month, from_year, to_month, to_year){
             dateString = point[3].toString() + "-" + point[4].toString();
             if(year == to_year && month > to_month){ break; }
 
-            if((year == from_year && month >= from_month) || (year > from_year)){   
+            if((year == from_year && month >= from_month) || (year > from_year)){  
+                if(temp > maxMeanTemp)
+                    maxMeanTemp = temp; //updating the max mean temp for left y axis
                 xLabels.push(dateString);
                 meanTempData.push(temp);
                 meanPrecipData.push(precipitation);
@@ -209,14 +213,20 @@ function d3update( data , from_month, from_year, to_month, to_year){
     }
 
     //Updating the d3 graph appropriately 
-    x = d3.scale.linear().domain([0, xLabels.length]).range([0, w]);
+    x = d3.scale.linear().domain([0, xLabels.length]).range([0, w]);    //x axis represents months since start
+    y1 = d3.scale.linear().domain([0, maxMeanTemp]).range([h, 0]);               //updating the left axis with meantemp
     xAxis = d3.svg.axis().scale(x).tickSize(-h).tickSubdivide(false);
+    yAxisLeft = d3.svg.axis().scale(y1).ticks(4).orient("left");
     // Select the section we want to apply our changes to
     svg = d3.select("#graph").transition();
     
     svg.select(".x.axis") // change the x axis
         .duration(750)
         .call(xAxis);
+
+    svg.select(".y.axis.axisLeft") // change the left y axis
+        .duration(750)
+        .call(yAxisLeft);
 
     graph.append("text")      // text label for the x axis
         .attr("x", 300 )

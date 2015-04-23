@@ -93,6 +93,29 @@ var line2 = d3.svg.line()
     // do this AFTER the axes above so that the line is above the tick-lines
     graph.append("svg:path").attr("d", line1(data1)).attr("class", "data1");
     graph.append("svg:path").attr("d", line2(data2)).attr("class", "data2");
+
+    //adding axis labels 
+    graph.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - m[0])
+        .attr("x",0 - (h / 2))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("Mean Temperature");
+
+    graph.append("text")
+        .attr("transform", "rotate(90)")
+        .attr("y", 0- w - 80)
+        .attr("x", (h/2))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("Commodity Price");
+
+    graph.append("text")      // text label for the x axis
+        .attr("x", 400 )
+        .attr("y", 400 )
+        .style("text-anchor", "middle")
+        .text("Months From Start");
     
 /**********END PLACEHOLDER GRAPH**************/
 
@@ -259,11 +282,7 @@ function d3update( data , from_month, from_year, to_month, to_year){
         .duration(750)
         .attr("d", line2(priceDataPoints));
 
-    graph.append("text")      // text label for the x axis
-        .attr("x", 400 )
-        .attr("y", 400 )
-        .style("text-anchor", "middle")
-        .text("Months From Start");
+
 }
 
 function cutoffDecimal(figure, decimals){

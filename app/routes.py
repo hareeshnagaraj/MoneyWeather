@@ -1,5 +1,5 @@
 # CS421 Project
-# Hareesh Nagaraj, Thomas Gill, Joe Soultanis
+# Hareesh Nagaraj, Thomas Gill, Joe Soultanis (The Legend)
 # Routes file for web app
 from flask import Flask, render_template, request, jsonify
 import psycopg2

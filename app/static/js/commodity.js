@@ -165,40 +165,64 @@ function GenerateUI( commodityInput, zipList )
 //Function to update the d3js UI appropriately
 //Time bounds are passed in here to simplify routes.py
 
+//TODO : account for MULTIPLE ZIP CODES by AVERAGING
+
 function d3update( data , from_month, from_year, to_month, to_year){
     var xLabels = [];                              //this will be defined by the valid weather data range
     var weather = data['packet']['weather'];      //weather data sent from server
     var commodityPrice = data['packet']['commodityPrice'];      //commodity price
     var numZips = 0;                                //Used to average out weather data if multiple zips present
     var meanTempData = [];
+    var meanPrecipData = [];
+    var meanHumidityData = [];
+    var temp, precipitation, humidity, month, year;
+
+    //Aggregating weather for each zipcode
     for(var zipcode in weather){
         zipweather = weather[zipcode];      //Getting weather for a specific month
+
+        //Parsing weather data
         for(var i = 0; i < zipweather.length; i++){
             point = zipweather[i];
             //Dealing with the X labels, defined by weather points NOT commodity
             temp = cutoffDecimal(point[0]);
-            precipitation = point[1]
-            humidity = point[2]
+            precipitation = cutoffDecimal(point[1]);
+            humidity = cutoffDecimal(point[2]);
             month = point[3];
             year = point[4]
             dateString = point[3].toString() + "-" + point[4].toString();
             if(year == to_year && month > to_month){ break; }
 
-            if((year == from_year && month >= from_month) || (year > from_year)){   //If statement 
+            if((year == from_year && month >= from_month) || (year > from_year)){   
                 xLabels.push(dateString);
                 meanTempData.push(temp);
+                meanPrecipData.push(precipitation);
+                meanHumidityData.push(humidity)
             }
-            // else if (year > from_year){
-            //     xLabels.push(dateString);
-            //     meanTempData.push(temp);
-            // }
-            
-            
+
             numZips++;
         }
         console.log(xLabels);
-        console.log(meanTempData)
+        console.log(meanTempData);
+        console.log(meanPrecipData);
+        console.log(meanHumidityData);
     }
+
+    //Updating the d3 graph appropriately 
+    x = d3.scale.linear().domain([0, xLabels.length]).range([0, w]);
+    xAxis = d3.svg.axis().scale(x).tickSize(-h).tickSubdivide(false);
+    // Select the section we want to apply our changes to
+    svg = d3.select("#graph").transition();
+    
+    svg.select(".x.axis") // change the x axis
+        .duration(750)
+        .call(xAxis);
+
+    graph.append("text")      // text label for the x axis
+        .attr("x", 300 )
+        .attr("y", 300 )
+        .style("text-anchor", "middle")
+        .text("Months From Start");
 }
 
 function cutoffDecimal(figure, decimals){

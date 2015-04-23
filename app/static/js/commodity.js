@@ -243,17 +243,21 @@ function d3update( data , from_month, from_year, to_month, to_year){
         .duration(750)
         .call(xAxis);
 
-    svg.select(".y.axis.axisLeft") // change the left y axis
+    svg.select(".y.axis.axisLeft") // change the left y axis domain
         .duration(750)
         .call(yAxisLeft);
 
-    svg.select(".y.axis.axisRight") // change the right y axis
+    svg.select(".y.axis.axisRight") // change the right y axis domain 
         .duration(750)
         .call(yAxisRight);
 
-    svg.select(".data1") // change the right y axis
+    svg.select(".data1") // change the left y axis domain
         .duration(750)
         .attr("d", line1(meanTempData));
+
+    svg.select(".data2") // change the left y axis domain
+        .duration(750)
+        .attr("d", line2(priceDataPoints));
 
     graph.append("text")      // text label for the x axis
         .attr("x", 400 )

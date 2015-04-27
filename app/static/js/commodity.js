@@ -173,7 +173,9 @@ function GenerateUI( commodityInput, zipList , units)
             $("#meanhumidity").addClass("green");
             $("#meantemp").addClass("disabled");
 
-            if(from_month == "Month" || from_year == "Year" || to_month == "Month" || to_year == "Year"){
+            if(from_month == "Month" || from_year == "Year" ||
+                 to_month == "Month" || to_year == "Year" ||
+                 to_year < from_year || (to_year == from_year && to_month <= from_month)){
                 window.alert("Please enter a valid time range");
                 return ;
             }

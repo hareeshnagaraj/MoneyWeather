@@ -29,7 +29,8 @@ def home():
 @app.route('/gold')
 def gold():
   # print("gold page rendering")
-  queryOne = "SELECT zip FROM location WHERE commodityName = 'gold'";
+  queryOne = "SELECT zip FROM location WHERE commodityName = 'gold'"
+  queryTwo = "SELECT unit_measure FROM commodity WHERE commodityName='gold'"
   cur = conn.cursor()
   cur.execute(queryOne)
   zipCodes = cur.fetchall()[0]
@@ -37,7 +38,10 @@ def gold():
   for code in zipCodes:
     zipCodesList.append(code)
   # print(zipCodesList)
-  return render_template('gold.html',zipList = zipCodesList)
+  cur.execute(queryTwo)
+  unitMeasure = cur.fetchall()[0][0]
+  print(unitMeasure)
+  return render_template('gold.html',unit=unitMeasure, zipList = zipCodesList)
 
 #Sends the weather data and commodity price back to commodity.js
 #format for each zip code : mean_temp, mean_precipitation, mean_humidity, month, year (aggregated by month)

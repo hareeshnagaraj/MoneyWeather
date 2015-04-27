@@ -6,8 +6,9 @@ Gold
 <!-- Calling hte UI parameters appropriately  -->
 {% block UIComponent %}
 <script>
+    var unit_measure = '{{unit}}';
     $(document).ready(function(){
-      GenerateUI("gold",{{zipList}})
+      GenerateUI("gold",{{zipList}},unit_measure)
     })
 </script>
 <script src="{{ url_for('static', filename='js/commodity.js') }}">

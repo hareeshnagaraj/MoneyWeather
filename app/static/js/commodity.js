@@ -106,6 +106,7 @@ var line2 = d3.svg.line()
 
     graph.append("text")
         .attr("transform", "rotate(90)")
+        .attr("class","priceAxisLabel")
         .attr("y", 0- w - 80)
         .attr("x", (h/2))
         .attr("dy", "1em")
@@ -121,7 +122,7 @@ var line2 = d3.svg.line()
 /**********END PLACEHOLDER GRAPH**************/
 
 //Function to be called from the template
-function GenerateUI( commodityInput, zipList )
+function GenerateUI( commodityInput, zipList , units)
     {
         var from_month = "Month";
         var from_year = "Year";
@@ -130,6 +131,11 @@ function GenerateUI( commodityInput, zipList )
 
         var zipCodes = zipList;
         console.log(zipCodes)
+
+        svg = d3.select("#graph").transition();
+        svg.select(".priceAxisLabel") // change the left y axis domain
+            .duration(750)
+            .text("Commodity Price  (per " + units + ")");
 
         $('ul#from_month li').click(function(e) 
         { 
@@ -190,7 +196,7 @@ function GenerateUI( commodityInput, zipList )
 
 //TODO : account for MULTIPLE ZIP CODES by AVERAGING
 
-function d3update( data , from_month, from_year, to_month, to_year){
+function d3update( data , from_month, from_year, to_month, to_year ){
     var xLabels = [];                              //this will be defined by the valid weather data range
     var weather = data['packet']['weather'];      //weather data sent from server
     var commodityPrice = data['packet']['commodityPrice'];      //commodity price

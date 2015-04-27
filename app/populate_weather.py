@@ -8,8 +8,19 @@ import urllib2
 import csv
 
 #NOTE: THESE NEED UPDATING BEFORE EACH NEW QUERY
-airport = "KEKO"
-ZIP = 89801
+#UNCOMMENT APPROPRIATELY
+
+#FOR NEVADA ---
+# airport = "KEKO"
+# ZIP = 89801
+#--END NEVADA
+
+
+#FOR IOWA ---
+airport = "KIOW"
+ZIP = 52246
+#--END IOWA
+
 tablename = "weather"
 
 directory = "data/weather/"
@@ -31,7 +42,7 @@ def populateWeatherCSV():
     while(year < 2015):
         url = getURL(urlp1,airport,year,urlp2)
         csv = urllib2.urlopen(url)
-        filename = "nevada"+str(year)+".csv"
+        filename = "iowa"+str(year)+".csv"    #CHANGE THIS BEFORE EACH QUERY
         output = open(directory + filename,'wb')
         output.write(csv.read())
         output.close()

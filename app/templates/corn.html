@@ -1,0 +1,16 @@
+{% extends "commodity.html" %}
+{% block title %}
+Corn
+{% endblock %}  
+
+<!-- Calling hte UI parameters appropriately  -->
+{% block UIComponent %}
+<script>
+    var unit_measure = '{{unit}}';
+    $(document).ready(function(){
+      GenerateUI("corn",{{zipList}},unit_measure)
+    })
+</script>
+<script src="{{ url_for('static', filename='js/commodity.js') }}">
+</script>
+{% endblock %}  

@@ -225,7 +225,8 @@ function d3update( data , from_month, from_year, to_month, to_year ){
     var maxMeanTemp = 0;
     var maxMeanPrecip = 0;
     var maxMeanHumidity = 0;
-    var maxPrice = 0;
+    var maxPrice = -1;
+    var minPrice = 9007199254740992;
 
     //Aggregating weather for each zipcode
     for(var zipcode in weather){
@@ -258,11 +259,11 @@ function d3update( data , from_month, from_year, to_month, to_year ){
 
             numZips++;
         }
-        console.log("final weather data")
-        console.log(xLabels);
-        console.log(meanTempData);
-        console.log(meanPrecipData);
-        console.log(meanHumidityData);
+        // console.log("final weather data")
+        // console.log(xLabels);
+        // console.log(meanTempData);
+        // console.log(meanPrecipData);
+        // console.log(meanHumidityData);
     }
 
     console.log("commodity price data gathering --");
@@ -274,16 +275,25 @@ function d3update( data , from_month, from_year, to_month, to_year ){
         year = pricePoint[2];
         if(year == to_year && month > to_month){ break; }
         if((year == from_year && month >= from_month) || (year > from_year)){
-            if(price > maxPrice)
+            if(+maxPrice < +price){         // NOTE : + operator converts to ints
                 maxPrice = price            //updating maximum price for right y axis
+                console.log("maxPrice : " + maxPrice)
+            }
+            if(+minPrice > +price){
+                console.log("minPrice update from : " + minPrice + " to " + price)
+                minPrice = price            //updating maximum price for right y axis
+            }
             priceDataPoints.push(price);
         }
     }
 
+    console.log("maxPrice : " + maxPrice)
+    console.log("minPrice : " + minPrice)
+
     //Updating the d3 graph appropriately 
     x = d3.scale.linear().domain([0, xLabels.length]).range([0, w]);    //x axis represents months since start
     y1 = d3.scale.linear().domain([0, maxMeanTemp]).range([h, 0]);      //updating the left axis with meantemp
-    y2 = d3.scale.linear().domain([0, maxPrice]).range([h, 0]);         //updating right axis with price
+    y2 = d3.scale.linear().domain([minPrice, maxPrice]).range([h, 0]);         //updating right axis with price
     xAxis = d3.svg.axis().scale(x).tickSize(-h).tickSubdivide(false);
     yAxisLeft = d3.svg.axis().scale(y1).ticks(10).orient("left");
     yAxisRight = d3.svg.axis().scale(y2).ticks(10).orient("right");

@@ -43,6 +43,26 @@ def gold():
   print(unitMeasure)
   return render_template('gold.html',unit=unitMeasure, zipList = zipCodesList)
 
+# This grabs the data necessary for the corn page, averages it monthly
+# the template is routed with the appropriate locations, that are to be
+# queried asynchronously inside the UI
+@app.route('/corn')
+def corn():
+  # print("corn page rendering")
+  queryOne = "SELECT zip FROM location WHERE commodityName = 'corn'"
+  queryTwo = "SELECT unit_measure FROM commodity WHERE commodityName='corn'"
+  cur = conn.cursor()
+  cur.execute(queryOne)
+  zipCodes = cur.fetchall()[0]
+  zipCodesList = []
+  for code in zipCodes:
+    zipCodesList.append(code)
+  # print(zipCodesList)
+  cur.execute(queryTwo)
+  unitMeasure = cur.fetchall()[0][0]
+  print(unitMeasure)
+  return render_template('corn.html',unit=unitMeasure, zipList = zipCodesList)
+
 #Sends the weather data and commodity price back to commodity.js
 #format for each zip code : mean_temp, mean_precipitation, mean_humidity, month, year (aggregated by month)
 #format for commodity price : mean_price, month, year (aggregated by month)

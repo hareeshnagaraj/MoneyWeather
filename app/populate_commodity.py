@@ -46,6 +46,41 @@ def populateGold():
                         pass
             x += 1
 
+def populateCorn():
+    print("Loading corn data from /data/commodities/corn_prices.csv")
+    prequery = "SELECT * FROM commodity WHERE commodityname = 'corn'"
+    cur.execute(prequery) 
+    if cur.rowcount == 0:   #insert corn into the commodity database if not present
+        print("Adding corn to the commodity table")
+        cur.execute("""INSERT INTO commodity (commodityname,unit_measure) VALUES (%s,%s)""",('corn','cents per bushel',))
+    prequery = "SELECT * FROM commodity_price WHERE commodityname = 'corn' AND day = %s AND month = %s AND year = %s"
+    with open('data/commodities/corn_prices.csv', 'rb') as csvfile:
+        spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
+        x = 0
+        for row in spamreader:
+            if x > 0:
+                date = row[0]
+                price = row[1]
+                dateparams = date.split("-")
+                year = dateparams[0]
+                month = dateparams[1]
+                day = dateparams[2]
+                cur.execute(prequery, (day,month,year))
+                print(date + " " + price)
+                # print(cur.rowcount)  
+                # print(row)
+                if cur.rowcount == 0:
+                    try:
+                        cur.execute("""INSERT INTO commodity_price \
+                            (commodityname,month,year,price,day) \
+                            VALUES (%s, %s, %s, %s, %s)""", \
+                            ("corn",month,year,price,day,))
+                    except Exception:
+                        print("ERROR")
+                        return ;
+                        pass
+            x += 1
+
 def main():
     if(len(sys.argv) != 2):
         print("Please execute this script as:")
@@ -54,4 +89,6 @@ def main():
     commodity = sys.argv[1].lower()
     if commodity == "gold":
         populateGold()
+    if commodity == "corn":
+        populateCorn()
 main()

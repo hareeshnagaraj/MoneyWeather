@@ -158,8 +158,21 @@ function GenerateUI( commodityInput, zipList , units)
             $("#to_year_label").text(to_year)
         });
 
+
+
         //Makes the call to load in the appropriate weather data necessary
         $("#generateButton").click(function(){
+            //Enabling precip, humidity buttons
+            $("#meanprecip").unbind("click");
+            $("#meanhumidity").unbind("click");
+            $("#meantemp").unbind("click");
+            $("#meanprecip").removeClass("disabled");
+            $("#meanhumidity").removeClass("disabled");
+            $("#meantemp").removeClass("green");
+            $("#meanprecip").addClass("green");
+            $("#meanhumidity").addClass("green");
+            $("#meantemp").addClass("disabled");
+
             if(from_month == "Month" || from_year == "Year" || to_month == "Month" || to_year == "Year"){
                 window.alert("Please enter a valid time range");
                 return ;

@@ -226,7 +226,10 @@ function d3update( data , from_month, from_year, to_month, to_year ){
     var maxMeanPrecip = 0;
     var maxMeanHumidity = 0;
     var maxPrice = -1;
-    var minPrice = 9007199254740992;
+    var minPrice = 9007199254740992;        //Largest possible number in JS
+    var minMeanTemp = 9007199254740992;
+    var minMeanPrecip = 9007199254740992;
+    var minMeanHumidity = 9007199254740992;
 
     //Aggregating weather for each zipcode
     for(var zipcode in weather){
@@ -245,12 +248,20 @@ function d3update( data , from_month, from_year, to_month, to_year ){
             if(year == to_year && month > to_month){ break; }
 
             if((year == from_year && month >= from_month) || (year > from_year)){  
-                if(temp > maxMeanTemp)
+                if(+temp > +maxMeanTemp)
                     maxMeanTemp = temp; //updating the max mean temp for left y axis
-                if(precipitation > maxMeanPrecip)
+                if(+precipitation > +maxMeanPrecip)
                     maxMeanPrecip = precipitation;
-                if(humidity > maxMeanHumidity)
+                if(+humidity > +maxMeanHumidity)
                     maxMeanHumidity = humidity;
+                
+                if(+temp < +minMeanTemp)
+                    minMeanTemp = temp; //updating the min mean temp for left y axis
+                if(+precipitation < +minMeanPrecip)
+                    minMeanPrecip = precipitation;
+                if(+humidity < +minMeanHumidity)
+                    minMeanHumidity = humidity;
+                
                 xLabels.push(dateString);
                 meanTempData.push(temp);
                 meanPrecipData.push(precipitation);
@@ -292,7 +303,7 @@ function d3update( data , from_month, from_year, to_month, to_year ){
 
     //Updating the d3 graph appropriately 
     x = d3.scale.linear().domain([0, xLabels.length]).range([0, w]);    //x axis represents months since start
-    y1 = d3.scale.linear().domain([0, maxMeanTemp]).range([h, 0]);      //updating the left axis with meantemp
+    y1 = d3.scale.linear().domain([minMeanTemp, maxMeanTemp]).range([h, 0]);      //updating the left axis with meantemp
     y2 = d3.scale.linear().domain([minPrice, maxPrice]).range([h, 0]);         //updating right axis with price
     xAxis = d3.svg.axis().scale(x).tickSize(-h).tickSubdivide(false);
     yAxisLeft = d3.svg.axis().scale(y1).ticks(10).orient("left");
@@ -353,7 +364,7 @@ function d3update( data , from_month, from_year, to_month, to_year ){
             .duration(750)
             .text("Mean Humidity (%)");
 
-        y1 = d3.scale.linear().domain([0, maxMeanHumidity]).range([h, 0]);      //updating the left axis with meantemp
+        y1 = d3.scale.linear().domain([minMeanHumidity, maxMeanHumidity]).range([h, 0]);      //updating the left axis with meantemp
         yAxisLeft = d3.svg.axis().scale(y1).ticks(10).orient("left");
 
         svg.select(".y.axis.axisLeft") // change the left y axis domain
@@ -378,7 +389,7 @@ function d3update( data , from_month, from_year, to_month, to_year ){
             .duration(750)
             .text("Mean Precipitation (Inches)");
 
-        y1 = d3.scale.linear().domain([0, maxMeanPrecip]).range([h, 0]);      //updating the left axis with meantemp
+        y1 = d3.scale.linear().domain([minMeanPrecip, maxMeanPrecip]).range([h, 0]);      //updating the left axis with meantemp
         yAxisLeft = d3.svg.axis().scale(y1).ticks(10).orient("left");
 
         svg.select(".y.axis.axisLeft") // change the left y axis domain
@@ -403,7 +414,7 @@ function d3update( data , from_month, from_year, to_month, to_year ){
             .duration(750)
             .text("Mean Temperature (Fahrenheit)");
 
-        y1 = d3.scale.linear().domain([0, maxMeanTemp]).range([h, 0]);
+        y1 = d3.scale.linear().domain([minMeanTemp, maxMeanTemp]).range([h, 0]);
         yAxisLeft = d3.svg.axis().scale(y1).ticks(10).orient("left"); 
 
         svg.select(".y.axis.axisLeft") // change the left y axis domain

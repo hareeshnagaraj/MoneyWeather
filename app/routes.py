@@ -27,8 +27,8 @@ def home():
 # the template is routed with the appropriate locations, that are to be
 # queried asynchronously inside the UI
 @app.route('/gold')
-def tool():
-  print("tool page rendering")
+def gold():
+  # print("gold page rendering")
   queryOne = "SELECT zip FROM location WHERE commodityName = 'gold'";
   cur = conn.cursor()
   cur.execute(queryOne)
@@ -36,7 +36,7 @@ def tool():
   zipCodesList = []
   for code in zipCodes:
     zipCodesList.append(code)
-  print(zipCodesList)
+  # print(zipCodesList)
   return render_template('gold.html',zipList = zipCodesList)
 
 #Sends the weather data and commodity price back to commodity.js

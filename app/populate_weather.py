@@ -24,6 +24,8 @@ conn.autocommit = True  #used to automatically commit updates to db
 def getURL(a,b,c,d):
     return a + b + "/" + str(c) + d
 
+#
+#NOTE MAKE SURE TO CHANGE filename BEFORE MOVING
 def populateWeatherCSV():
     year = 2000
     while(year < 2015):

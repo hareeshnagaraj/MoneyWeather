@@ -102,7 +102,7 @@ var line2 = d3.svg.line()
         .attr("x",0 - (h / 2))
         .attr("dy", "1em")
         .style("text-anchor", "middle")
-        .text("Mean Temperature");
+        .text("Mean Temperature (Fahrenheit)");
 
     graph.append("text")
         .attr("transform", "rotate(90)")
@@ -202,6 +202,8 @@ function d3update( data , from_month, from_year, to_month, to_year){
     var temp, precipitation, humidity, month, year;
 
     var maxMeanTemp = 0;
+    var maxMeanPrecip = 0;
+    var maxMeanHumidity = 0;
     var maxPrice = 0;
 
     //Aggregating weather for each zipcode
@@ -223,6 +225,10 @@ function d3update( data , from_month, from_year, to_month, to_year){
             if((year == from_year && month >= from_month) || (year > from_year)){  
                 if(temp > maxMeanTemp)
                     maxMeanTemp = temp; //updating the max mean temp for left y axis
+                if(precipitation > maxMeanPrecip)
+                    maxMeanPrecip = precipitation;
+                if(humidity > maxMeanHumidity)
+                    maxMeanHumidity = humidity;
                 xLabels.push(dateString);
                 meanTempData.push(temp);
                 meanPrecipData.push(precipitation);
@@ -282,6 +288,11 @@ function d3update( data , from_month, from_year, to_month, to_year){
     svg.select(".data2") // change the left y axis domain
         .duration(750)
         .attr("d", line2(priceDataPoints));
+    
+    svg.select(".weatherAxis") // change the left y axis domain
+        .duration(750)
+        .text("Mean Temperature (Fahrenheit)");
+
 
 
     //Button listeners to update data dynamically
@@ -309,7 +320,18 @@ function d3update( data , from_month, from_year, to_month, to_year){
         svg = d3.select("#graph").transition();
         svg.select(".weatherAxis") // change the left y axis domain
             .duration(750)
-            .text("Mean Humidity");
+            .text("Mean Humidity (%)");
+
+        y1 = d3.scale.linear().domain([0, maxMeanHumidity]).range([h, 0]);      //updating the left axis with meantemp
+        yAxisLeft = d3.svg.axis().scale(y1).ticks(10).orient("left");
+
+        svg.select(".y.axis.axisLeft") // change the left y axis domain
+            .duration(750)
+            .call(yAxisLeft);
+
+        svg.select(".data1") // change the left y axis domain
+            .duration(750)
+            .attr("d", line1(meanHumidityData));
     });
 
     $("#meanprecip").click(function(){
@@ -323,7 +345,18 @@ function d3update( data , from_month, from_year, to_month, to_year){
         svg = d3.select("#graph").transition();
         svg.select(".weatherAxis") // change the left y axis domain
             .duration(750)
-            .text("Mean Precipitation");
+            .text("Mean Precipitation (Inches)");
+
+        y1 = d3.scale.linear().domain([0, maxMeanPrecip]).range([h, 0]);      //updating the left axis with meantemp
+        yAxisLeft = d3.svg.axis().scale(y1).ticks(10).orient("left");
+
+        svg.select(".y.axis.axisLeft") // change the left y axis domain
+            .duration(750)
+            .call(yAxisLeft);
+
+        svg.select(".data1") // change the left y axis domain
+            .duration(750)
+            .attr("d", line1(meanPrecipData));
     });
 
     $("#meantemp").click(function(){
@@ -337,7 +370,18 @@ function d3update( data , from_month, from_year, to_month, to_year){
         svg = d3.select("#graph").transition();
         svg.select(".weatherAxis") // change the left y axis domain
             .duration(750)
-            .text("Mean Temperature");
+            .text("Mean Temperature (Fahrenheit)");
+
+        y1 = d3.scale.linear().domain([0, maxMeanTemp]).range([h, 0]);
+        yAxisLeft = d3.svg.axis().scale(y1).ticks(10).orient("left"); 
+
+        svg.select(".y.axis.axisLeft") // change the left y axis domain
+            .duration(750)
+            .call(yAxisLeft);
+
+        svg.select(".data1") // change the left y axis domain
+            .duration(750)
+            .attr("d", line1(meanTempData));
     });
 
 }

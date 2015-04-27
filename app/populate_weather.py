@@ -17,9 +17,14 @@ import csv
 
 
 #FOR IOWA ---
-airport = "KIOW"
-ZIP = 52246
+# airport = "KIOW"
+# ZIP = 52246
 #--END IOWA
+
+#FOR ILLINOIS
+airport = "SPI"
+ZIP = 62707
+#END ILLINOIS
 
 tablename = "weather"
 
@@ -42,7 +47,7 @@ def populateWeatherCSV():
     while(year < 2015):
         url = getURL(urlp1,airport,year,urlp2)
         csv = urllib2.urlopen(url)
-        filename = "iowa"+str(year)+".csv"    #CHANGE THIS BEFORE EACH QUERY
+        filename = "illinois"+str(year)+".csv"    #CHANGE THIS BEFORE EACH QUERY
         output = open(directory + filename,'wb')
         output.write(csv.read())
         output.close()

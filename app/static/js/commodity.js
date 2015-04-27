@@ -206,10 +206,19 @@ function GenerateUI( commodityInput, zipList , units)
         });
  }
 
+function makeArrayOf(value, length) {
+  var arr = [], i = length;
+  while (i--) {
+    arr[i] = value;
+  }
+  return arr;
+}
+
 //Function to update the d3js UI appropriately
 //Time bounds are passed in here to simplify routes.py
 
 //TODO : account for MULTIPLE ZIP CODES by AVERAGING
+
 
 function d3update( data , from_month, from_year, to_month, to_year ){
     var xLabels = [];                              //this will be defined by the valid weather data range
@@ -232,9 +241,10 @@ function d3update( data , from_month, from_year, to_month, to_year ){
     var minMeanHumidity = 9007199254740992;
 
     //Aggregating weather for each zipcode
+    console.log("FIRST THING " + weather[0])
+    console.log(weather)
     for(var zipcode in weather){
         zipweather = weather[zipcode];      //Getting weather for a specific month
-
         //Parsing weather data
         for(var i = 0; i < zipweather.length; i++){
             point = zipweather[i];
@@ -265,7 +275,11 @@ function d3update( data , from_month, from_year, to_month, to_year ){
                 xLabels.push(dateString);
                 meanTempData.push(temp);
                 meanPrecipData.push(precipitation);
-                meanHumidityData.push(humidity)
+                meanHumidityData.push(humidity);
+                // if(!meanPrecipData[i]){
+                //     meanPrecipData.push(precipitation);
+                //     console.log("pushing : " + precipitation)
+                // } else { meanPrecipData[i] += precipitation }
             }
 
             numZips++;
@@ -279,7 +293,7 @@ function d3update( data , from_month, from_year, to_month, to_year ){
 
     console.log("commodity price data gathering --");
     for(var i = 0; i < commodityPrice.length; i++){
-        console.log(commodityPrice[i])
+        // console.log(commodityPrice[i])
         pricePoint = commodityPrice[i];
         price = cutoffDecimal(pricePoint[0]);
         month = pricePoint[1];
@@ -288,18 +302,16 @@ function d3update( data , from_month, from_year, to_month, to_year ){
         if((year == from_year && month >= from_month) || (year > from_year)){
             if(+maxPrice < +price){         // NOTE : + operator converts to ints
                 maxPrice = price            //updating maximum price for right y axis
-                console.log("maxPrice : " + maxPrice)
+                // console.log("maxPrice : " + maxPrice)
             }
             if(+minPrice > +price){
-                console.log("minPrice update from : " + minPrice + " to " + price)
+                // console.log("minPrice update from : " + minPrice + " to " + price)
                 minPrice = price            //updating maximum price for right y axis
             }
             priceDataPoints.push(price);
         }
     }
 
-    console.log("maxPrice : " + maxPrice)
-    console.log("minPrice : " + minPrice)
 
     //Updating the d3 graph appropriately 
     x = d3.scale.linear().domain([0, xLabels.length]).range([0, w]);    //x axis represents months since start
@@ -431,5 +443,5 @@ function d3update( data , from_month, from_year, to_month, to_year ){
 function cutoffDecimal(figure, decimals){
     if (!decimals) decimals = 2;
     var d = Math.pow(10,decimals);
-    return (parseInt(figure*d)/d).toFixed(decimals);
+    return (parseFloat(figure*d)/d).toFixed(decimals);
 };

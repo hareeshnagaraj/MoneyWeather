@@ -40,7 +40,8 @@ def gold():
   # print(zipCodesList)
   cur.execute(queryTwo)
   unitMeasure = cur.fetchall()[0][0]
-  print(unitMeasure)
+  # print(unitMeasure)
+  print(zipCodesList)
   return render_template('gold.html',unit=unitMeasure, zipList = zipCodesList)
 
 # This grabs the data necessary for the corn page, averages it monthly
@@ -48,15 +49,18 @@ def gold():
 # queried asynchronously inside the UI
 @app.route('/corn')
 def corn():
-  # print("corn page rendering")
+  print("corn page rendering")
   queryOne = "SELECT zip FROM location WHERE commodityName = 'corn'"
   queryTwo = "SELECT unit_measure FROM commodity WHERE commodityName='corn'"
   cur = conn.cursor()
   cur.execute(queryOne)
-  zipCodes = cur.fetchall()[0]
+  results = cur.fetchall()
+  # zipCodes = results
+  zipCodes = results[0]
   zipCodesList = []
   for code in zipCodes:
-    zipCodesList.append(code)
+  	zipCodesList.append(code)
+    # zipCodesList.append(code[0])
   # print(zipCodesList)
   cur.execute(queryTwo)
   unitMeasure = cur.fetchall()[0][0]
@@ -70,18 +74,18 @@ def corn():
 @app.route('/pagedata',methods=['POST'])
 def weatherdata():
 	print("weather request -- ")
-	print(request.form)
+	# print(request.form)
 	zipCodes = request.form.getlist('zipCodes[]')
 	commodity = request.form.get('commodity')
 	from_month = request.form.get('from_month')
 	from_year = request.form.get('from_year')
 	to_month = request.form.get('to_month')
 	to_year = request.form.get('to_year')
-	print(commodity)
-	print(from_month)
-	print(from_year)
-	print(to_month)
-	print(to_year)
+	# print(commodity)
+	# print(from_month)
+	# print(from_year)
+	# print(to_month)
+	# print(to_year)
 	data = {}
 	data['weather'] = {}
 	for code in zipCodes:
@@ -90,13 +94,13 @@ def weatherdata():
 			 WHERE ((a.zip = %s AND a.year <= %s AND a.year >= %s)) GROUP BY a.month,a.year ORDER BY a.year, a.month\
 		""", (code, to_year,from_year))
 		data['weather'][code] = cur.fetchall()
-	# print(weatherDict)
+	print(data['weather'])
 	
 	cur.execute("""SELECT AVG(price), month, year FROM commodity_price\
 			 WHERE ((commodityname = %s AND year <= %s AND year >= %s)) GROUP BY month,year ORDER BY year, month
 		""", ("gold",to_year,from_year))
 	data['commodityPrice'] = cur.fetchall()
-	print(data)
+	# print(data)
 	return jsonify(packet=data)
 
 if __name__ == '__main__':

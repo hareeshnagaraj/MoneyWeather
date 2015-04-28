@@ -7,8 +7,10 @@ Gold
 {% block UIComponent %}
 <script>
     var unit_measure = '{{unit}}';
+    var source = '{{source}}';
+    // var data_source = '{{source}}';
     $(document).ready(function(){
-      GenerateUI("gold",{{zipList}},unit_measure)
+      GenerateUI("gold",{{zipList}},unit_measure,source,"{{location}}");
     })
 </script>
 <script src="{{ url_for('static', filename='js/commodity.js') }}">

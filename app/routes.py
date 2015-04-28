@@ -28,21 +28,28 @@ def home():
 # queried asynchronously inside the UI
 @app.route('/gold')
 def gold():
-  # print("gold page rendering")
-  queryOne = "SELECT zip FROM location WHERE commodityName = 'gold'"
-  queryTwo = "SELECT unit_measure FROM commodity WHERE commodityName='gold'"
+  print("corn page rendering")
+  queryOne = "SELECT * FROM location WHERE commodityName = 'gold'"
+  queryTwo = "SELECT * FROM commodity WHERE commodityName='gold'"
   cur = conn.cursor()
   cur.execute(queryOne)
-  zipCodes = cur.fetchall()[0]
+  results = cur.fetchall()
+  # zipCodes = results
+  zipCodes = results[0]
   zipCodesList = []
-  for code in zipCodes:
-    zipCodesList.append(code)
-  # print(zipCodesList)
+  # for code in zipCodes:
+  print(zipCodes)
+  zipCodesList.append(zipCodes[1])
   cur.execute(queryTwo)
-  unitMeasure = cur.fetchall()[0][0]
-  # print(unitMeasure)
-  print(zipCodesList)
-  return render_template('gold.html',unit=unitMeasure, zipList = zipCodesList)
+  county = zipCodes[2]
+  state = zipCodes[3]
+  locationString = county + ", " + state
+  resultsTwo = cur.fetchall()
+  unitMeasure = resultsTwo[0][2]
+  dataSource = str(resultsTwo[0][3])
+  print(dataSource)
+  print(unitMeasure)
+  return render_template('gold.html',unit = unitMeasure, zipList = zipCodesList, source = dataSource, location=locationString)
 
 # This grabs the data necessary for the corn page, averages it monthly
 # the template is routed with the appropriate locations, that are to be
@@ -50,22 +57,27 @@ def gold():
 @app.route('/corn')
 def corn():
   print("corn page rendering")
-  queryOne = "SELECT zip FROM location WHERE commodityName = 'corn'"
-  queryTwo = "SELECT unit_measure FROM commodity WHERE commodityName='corn'"
+  queryOne = "SELECT * FROM location WHERE commodityName = 'corn'"
+  queryTwo = "SELECT * FROM commodity WHERE commodityName='corn'"
   cur = conn.cursor()
   cur.execute(queryOne)
   results = cur.fetchall()
   # zipCodes = results
   zipCodes = results[0]
   zipCodesList = []
-  for code in zipCodes:
-  	zipCodesList.append(code)
-    # zipCodesList.append(code[0])
-  # print(zipCodesList)
+  # for code in zipCodes:
+  print(zipCodes)
+  zipCodesList.append(zipCodes[1])
   cur.execute(queryTwo)
-  unitMeasure = cur.fetchall()[0][0]
+  county = zipCodes[2]
+  state = zipCodes[3]
+  locationString = county + ", " + state
+  resultsTwo = cur.fetchall()
+  unitMeasure = resultsTwo[0][2]
+  dataSource = str(resultsTwo[0][3])
+  print(dataSource)
   print(unitMeasure)
-  return render_template('corn.html',unit=unitMeasure, zipList = zipCodesList)
+  return render_template('corn.html',unit = unitMeasure, zipList = zipCodesList, source = dataSource, location=locationString)
 
 #Sends the weather data and commodity price back to commodity.js
 #format for each zip code : mean_temp, mean_precipitation, mean_humidity, month, year (aggregated by month)

@@ -7,8 +7,11 @@ Corn
 {% block UIComponent %}
 <script>
     var unit_measure = '{{unit}}';
+    var source = '{{source}}';
+    // var location = "{{location}}";
+    console.log(location);
     $(document).ready(function(){
-      GenerateUI("corn",{{zipList}},unit_measure)
+      GenerateUI("corn",{{zipList}},unit_measure,source,"{{location}}");
     })
 </script>
 <script src="{{ url_for('static', filename='js/commodity.js') }}">

@@ -122,7 +122,7 @@ var line2 = d3.svg.line()
 /**********END PLACEHOLDER GRAPH**************/
 
 //Function to be called from the template
-function GenerateUI( commodityInput, zipList , units)
+function GenerateUI( commodityInput, zipList , units, dataSource, dataLocation)
     {
         var from_month = "Month";
         var from_year = "Year";
@@ -130,7 +130,9 @@ function GenerateUI( commodityInput, zipList , units)
         var to_year = "Year";
 
         var zipCodes = zipList;
-        console.log(zipCodes)
+        console.log(zipCodes);
+        console.log(units)
+        console.log(dataSource);
 
         svg = d3.select("#graph").transition();
         svg.select(".priceAxisLabel") // change the left y axis domain
@@ -157,6 +159,11 @@ function GenerateUI( commodityInput, zipList , units)
             to_year = $(this).find("a").text();
             $("#to_year_label").text(to_year)
         });
+
+        //Updating the description UI with the appropriate information
+        $("#dataSource").text(dataSource);
+        $("#dataLocation").text(dataLocation);
+        $("#descriptionContainer").fadeIn(500);
 
 
 

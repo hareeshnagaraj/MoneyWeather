@@ -58,6 +58,9 @@
       .y.axisLeft text {
         fill: steelblue;
       }
+      #descriptionContainer{
+        display: none;
+      }
       </style>
 </head>
 <body>
@@ -176,6 +179,20 @@
       </div>
 
       </div>
+  </div>
+
+  <!-- Description Container -->
+  <div id="descriptionContainer" class="container">
+    <div class="col-md-4">
+      <div class="row">
+        <h5>Data Source: <div id="dataSource"></div></h5>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="row">
+        <h5>Geographical Location: <div id="dataLocation"></div></h5>
+      </div>
+    </div>
   </div>
 
 <footer class="page-footer green">

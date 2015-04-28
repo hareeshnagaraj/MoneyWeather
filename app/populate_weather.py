@@ -22,9 +22,26 @@ import csv
 #--END IOWA
 
 #FOR ILLINOIS
-airport = "SPI"
-ZIP = 62707
+# airport = "SPI"
+# ZIP = 62707
 #END ILLINOIS
+
+
+#FOR Hawaii
+#NOTE -- HAWAII CSVS ARE MESSED UP, MUST RE-RUN IF YOU WANT THEM BACK
+# airport = "KOA"
+# ZIP = 96740
+#END Hawaii
+
+#FOR TEXAS
+# airport = "LBX"
+# ZIP = 77515
+#END TEXAS
+
+#FOR kansas
+airport = "FOE"
+ZIP = 66409
+#END kansas
 
 tablename = "weather"
 
@@ -47,7 +64,7 @@ def populateWeatherCSV():
     while(year < 2015):
         url = getURL(urlp1,airport,year,urlp2)
         csv = urllib2.urlopen(url)
-        filename = "illinois"+str(year)+".csv"    #CHANGE THIS BEFORE EACH QUERY
+        filename = "kansas"+str(year)+".csv"    #CHANGE THIS BEFORE EACH QUERY
         output = open(directory + filename,'wb')
         output.write(csv.read())
         output.close()

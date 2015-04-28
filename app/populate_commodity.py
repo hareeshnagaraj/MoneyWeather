@@ -151,6 +151,41 @@ def populateCoffee():
                         pass
             x += 1
 
+def populateNaturalGas():
+    print("Loading natural gas data from /data/commodities/natural_gas.csv")
+    prequery = "SELECT * FROM commodity WHERE commodityname = 'natural gas'"
+    cur.execute(prequery) 
+    if cur.rowcount == 0:   #insert natural gas into the commodity database if not present
+        print("Adding natural gas to the commodity table")
+        cur.execute("""INSERT INTO commodity (commodityname,unit_measure) VALUES (%s,%s)""",('natural gas','cents per bushel',))
+    prequery = "SELECT * FROM commodity_price WHERE commodityname = 'natural gas' AND day = %s AND month = %s AND year = %s"
+    with open('data/commodities/natural_gas.csv', 'rb') as csvfile:
+        spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
+        x = 0
+        for row in spamreader:
+            if x > 0:
+                date = row[0]
+                price = row[1]
+                dateparams = date.split("-")
+                year = dateparams[0]
+                month = dateparams[1]
+                day = dateparams[2]
+                cur.execute(prequery, (day,month,year))
+                print(date + " " + price)
+                # print(cur.rowcount)  
+                # print(row)
+                if cur.rowcount == 0:
+                    try:
+                        cur.execute("""INSERT INTO commodity_price \
+                            (commodityname,month,year,price,day) \
+                            VALUES (%s, %s, %s, %s, %s)""", \
+                            ("natural gas",month,year,price,day,))
+                    except Exception:
+                        print("ERROR")
+                        return ;
+                        pass
+            x += 1
+
 def main():
     if(len(sys.argv) != 2):
         print("Please execute this script as:")
@@ -165,4 +200,6 @@ def main():
         populateWheat()
     if commodity == "coffee":
         populateCoffee()
+    if commodity == "gas":
+        populateNaturalGas()
 main()

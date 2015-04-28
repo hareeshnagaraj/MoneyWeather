@@ -79,6 +79,92 @@ def corn():
   print(unitMeasure)
   return render_template('corn.html',unit = unitMeasure, zipList = zipCodesList, source = dataSource, location=locationString)
 
+
+# This grabs the data necessary for the coffee page, averages it monthly
+# the template is routed with the appropriate locations, that are to be
+# queried asynchronously inside the UI
+@app.route('/coffee')
+def coffee():
+  print("coffee page rendering")
+  queryOne = "SELECT * FROM location WHERE commodityName = 'coffee'"
+  queryTwo = "SELECT * FROM commodity WHERE commodityName='coffee'"
+  cur = conn.cursor()
+  cur.execute(queryOne)
+  results = cur.fetchall()
+  # zipCodes = results
+  zipCodes = results[0]
+  zipCodesList = []
+  # for code in zipCodes:
+  print(zipCodes)
+  zipCodesList.append(zipCodes[1])
+  cur.execute(queryTwo)
+  county = zipCodes[2]
+  state = zipCodes[3]
+  locationString = county + ", " + state
+  resultsTwo = cur.fetchall()
+  unitMeasure = resultsTwo[0][2]
+  dataSource = str(resultsTwo[0][3])
+  print(dataSource)
+  print(unitMeasure)
+  return render_template('coffee.html',unit = unitMeasure, zipList = zipCodesList, source = dataSource, location=locationString)
+
+# This grabs the data necessary for the wheat page, averages it monthly
+# the template is routed with the appropriate locations, that are to be
+# queried asynchronously inside the UI
+@app.route('/wheat')
+def wheat():
+  print("wheat page rendering")
+  queryOne = "SELECT * FROM location WHERE commodityName = 'wheat'"
+  queryTwo = "SELECT * FROM commodity WHERE commodityName='wheat'"
+  cur = conn.cursor()
+  cur.execute(queryOne)
+  results = cur.fetchall()
+  # zipCodes = results
+  zipCodes = results[0]
+  zipCodesList = []
+  # for code in zipCodes:
+  print(zipCodes)
+  zipCodesList.append(zipCodes[1])
+  cur.execute(queryTwo)
+  county = zipCodes[2]
+  state = zipCodes[3]
+  locationString = county + ", " + state
+  resultsTwo = cur.fetchall()
+  unitMeasure = resultsTwo[0][2]
+  dataSource = str(resultsTwo[0][3])
+  print(dataSource)
+  print(unitMeasure)
+  return render_template('wheat.html',unit = unitMeasure, zipList = zipCodesList, source = dataSource, location=locationString)
+
+# This grabs the data necessary for the naturalgas page, averages it monthly
+# the template is routed with the appropriate locations, that are to be
+# queried asynchronously inside the UI
+@app.route('/naturalgas')
+def naturalgas():
+  print("naturalgas page rendering")
+  queryOne = "SELECT * FROM location WHERE commodityName = 'natural gas'"
+  queryTwo = "SELECT * FROM commodity WHERE commodityName='natural gas'"
+  cur = conn.cursor()
+  cur.execute(queryOne)
+  results = cur.fetchall()
+  # zipCodes = results
+  zipCodes = results[0]
+  zipCodesList = []
+  # for code in zipCodes:
+  print(zipCodes)
+  zipCodesList.append(zipCodes[1])
+  cur.execute(queryTwo)
+  county = zipCodes[2]
+  state = zipCodes[3]
+  locationString = county + ", " + state
+  resultsTwo = cur.fetchall()
+  unitMeasure = resultsTwo[0][2]
+  dataSource = str(resultsTwo[0][3])
+  print(dataSource)
+  print(unitMeasure)
+  return render_template('natural_gas.html',unit = unitMeasure, zipList = zipCodesList, source = dataSource, location=locationString)
+
+
 #Sends the weather data and commodity price back to commodity.js
 #format for each zip code : mean_temp, mean_precipitation, mean_humidity, month, year (aggregated by month)
 #format for commodity price : mean_price, month, year (aggregated by month)

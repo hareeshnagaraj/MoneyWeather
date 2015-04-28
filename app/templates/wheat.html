@@ -1,0 +1,19 @@
+{% extends "commodity.html" %}
+{% block title %}
+Wheat
+{% endblock %}  
+<!-- DATA for iowa, illinois updated -->
+<!-- Calling hte UI parameters appropriately  -->
+{% block UIComponent %}
+<script>
+    var unit_measure = '{{unit}}';
+    var source = '{{source}}';
+    // var location = "{{location}}";
+    console.log(location);
+    $(document).ready(function(){
+      GenerateUI("wheat",{{zipList}},unit_measure,source,"{{location}}");
+    })
+</script>
+<script src="{{ url_for('static', filename='js/commodity.js') }}">
+</script>
+{% endblock %}  

@@ -176,19 +176,19 @@ Matrix.prototype.regression_coefficients = function(x) {
 }
 
 
-//Original
-var y = new ColumnVector([1,2,3,4,5]);
-var x = new ColumnVector([2,1,3,4,5]);
-console.log(y.regression_coefficients(x));
+// //Original
+// var y = new ColumnVector([1,2,3,4,5]);
+// var x = new ColumnVector([2,1,3,4,5]);
+// console.log(y.regression_coefficients(x));
  
-// the Ruby example
-var y = new Matrix([[1,1],
-                    [2,4]]);
+// // the Ruby example
+// var y = new Matrix([[1,1],
+//                     [2,4]]);
 
-var x = new Matrix([[1,1,1],
-                    [2,4,16]]);
-console.log(y.regression_coefficients(x));
-//console.log();
+// var x = new Matrix([[1,1,1],
+//                     [2,4,16]]);
+// console.log(y.regression_coefficients(x));
+// //console.log();
  
 //the Tcl example
 //OKAY, so number of entries in y must match # arrays in x

@@ -370,6 +370,7 @@ function d3update( data , from_month, from_year, to_month, to_year ){
 
     //Updating the calculator area
     $("#modalPrompt").text("Input a Mean Temp. Value (Fahrenheit)");
+    $("#modalButton").text("Input Temp. Values");
 
 
     //Updating the d3 graph appropriately 
@@ -451,6 +452,7 @@ function d3update( data , from_month, from_year, to_month, to_year ){
 
         //Updating the calculator area
         $("#modalPrompt").text("Input a Mean Humidity Value (%)");
+        $("#modalButton").text("Input Humidity Values");
 
         svg = d3.select("#graph").transition();
         svg.select(".weatherAxis") // change the left y axis domain
@@ -497,6 +499,7 @@ function d3update( data , from_month, from_year, to_month, to_year ){
 
         //Updating the calculator area
         $("#modalPrompt").text("Input a Mean Precipitation Value (Inches)");
+        $("#modalButton").text("Input Precip. Values");
 
         svg = d3.select("#graph").transition();
         svg.select(".weatherAxis") // change the left y axis domain
@@ -542,6 +545,7 @@ function d3update( data , from_month, from_year, to_month, to_year ){
 
         //Updating the calculator area
         $("#modalPrompt").text("Input a Mean Temp. Value (Fahrenheit)");
+        $("#modalButton").text("Input Temp. Values");
         
         svg = d3.select("#graph").transition();
         svg.select(".weatherAxis") // change the left y axis domain

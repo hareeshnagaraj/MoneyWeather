@@ -179,11 +179,6 @@ def weatherdata():
 	from_year = request.form.get('from_year')
 	to_month = request.form.get('to_month')
 	to_year = request.form.get('to_year')
-	# print(commodity)
-	# print(from_month)
-	# print(from_year)
-	# print(to_month)
-	# print(to_year)
 	data = {}
 	data['weather'] = {}
 	for code in zipCodes:

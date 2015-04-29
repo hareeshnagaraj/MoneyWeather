@@ -263,8 +263,8 @@ function d3update( data , from_month, from_year, to_month, to_year ){
     var minMeanHumidity = 9007199254740992;
 
     //Aggregating weather for each zipcode
-    console.log("FIRST THING " + weather[0])
-    console.log(weather)
+    // console.log("FIRST THING " + weather[0])
+    // console.log(weather)
     for(var zipcode in weather){
         zipweather = weather[zipcode];      //Getting weather for a specific month
         //Parsing weather data
@@ -313,7 +313,7 @@ function d3update( data , from_month, from_year, to_month, to_year ){
         // console.log(meanHumidityData);
     }
 
-    console.log("commodity price data gathering --");
+    // console.log("commodity price data gathering --");
     for(var i = 0; i < commodityPrice.length; i++){
         // console.log(commodityPrice[i])
         pricePoint = commodityPrice[i];
@@ -367,8 +367,9 @@ function d3update( data , from_month, from_year, to_month, to_year ){
                                             function(x) { 
                                                 return m*x + b ;
                                             });
-    console.log("rsquared");
-    console.log(r_squared);
+    // console.log("rsquared");
+    // console.log(r_squared);
+
 
     $("#linRegTitle").show();
     $("#linRegM").text("m = " + cutoffDecimal(m));
@@ -415,7 +416,16 @@ function d3update( data , from_month, from_year, to_month, to_year ){
         .duration(750)
         .text("Mean Temperature (Fahrenheit)");
 
+    console.log("x length")
+    // console.log(x.length);
+    // console.log(x);
 
+    /*----- Multivariate Regression ------*/
+    var xMatrix = new Matrix(getMultRegDataPairs(meanTempData));
+    var yMatrix = new Matrix(getMultRegYValues(priceDataPoints));
+    console.log(xMatrix);
+    console.log(yMatrix);
+    console.log(yMatrix.regression_coefficients(xMatrix));
 
     //Button listeners to update data dynamically
     //unbinding click listeners
@@ -598,6 +608,26 @@ function d3update( data , from_month, from_year, to_month, to_year ){
         $("#calcOutput").text("$" + cutoffDecimal(line(inputVal)));
     });
 
+}
+
+function getMultRegYValues(data){
+    var regInput = [];
+    var regPoint;
+    for(var i = 0; i < data.length; i++){
+        regPoint = [data[i]];
+        regInput.push(regPoint);
+    }
+    return regInput;
+}
+
+function getMultRegDataPairs(data){
+    var regInput = [];
+    var regPoint;
+    for(var i = 0; i < data.length; i++){
+        regPoint = [data[i], i];
+        regInput.push(regPoint);
+    }
+    return regInput;
 }
 
 function getDataPairs(xData, yData){

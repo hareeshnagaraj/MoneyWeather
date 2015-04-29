@@ -182,9 +182,12 @@ var x = new ColumnVector([2,1,3,4,5]);
 console.log(y.regression_coefficients(x));
  
 // the Ruby example
-// var y = new Matrix([[1,1,1,1],[2,4,8,16]]);
-// var x = new Matrix([[1,1,1,1],[2,4,8,16]]);
-// console.log(y.regression_coefficients(x));
+var y = new Matrix([[1,1],
+                    [2,4]]);
+
+var x = new Matrix([[1,1,1],
+                    [2,4,16]]);
+console.log(y.regression_coefficients(x));
 //console.log();
  
 //the Tcl example
@@ -204,4 +207,4 @@ console.log(y.regression_coefficients(x));
 //     [[1.47,1.50],[1.47,1.50]]
 // );
 
-console.log(y.regression_coefficients(x));
+// console.log(y.regression_coefficients(x));

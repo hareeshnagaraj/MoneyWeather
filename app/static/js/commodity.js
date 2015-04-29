@@ -1,6 +1,7 @@
 /*
 JavaScript that defines the UI element interactions on the page
 Mostly in jQuery, just for simplicity
+--Hareesh Nagaraj
 */
 
 /**********PLACEHOLDER GRAPH**************/
@@ -123,6 +124,7 @@ var line2 = d3.svg.line()
 /**********END PLACEHOLDER GRAPH**************/
 
 //Function to be called from the template
+//Generates the d3 values, and binds the listeners appropriatley for user interaction
 function GenerateUI( commodityInput, zipList , units, dataSource, dataLocation)
     {
         var from_month = "Month";
@@ -159,6 +161,12 @@ function GenerateUI( commodityInput, zipList , units, dataSource, dataLocation)
         { 
             to_year = $(this).find("a").text();
             $("#to_year_label").text(to_year)
+        });
+
+        //Modal triggers
+        $('.modal-trigger').leanModal();
+        $("#modalButton").click(function(){
+            $("#modal1").openModal();
         });
 
         //Updating the description UI with the appropriate information
@@ -350,10 +358,7 @@ function d3update( data , from_month, from_year, to_month, to_year ){
     $("#weatherStandardDev").text("Standard Deviation : " + cutoffDecimal(weatherStandardDeviation));
     $("#weatherVariance").text("Variance : " + cutoffDecimal(weatherVariance));
 
-    //Performing a linear regression on the two variables
-    //First, creating the data set appropriately
-
-
+    //Performing a linear regression on the two variables   
     linRegression = regressionLine(meanTempData,priceDataPoints);
     m = linRegression.m();
     b = linRegression.b();
@@ -362,6 +367,9 @@ function d3update( data , from_month, from_year, to_month, to_year ){
     $("#linRegM").text("m = " + cutoffDecimal(m));
     $("#linRegB").text("b = " + cutoffDecimal(b));
     $("#linRegEquation").text("y = " + cutoffDecimal(m) + "x + " + cutoffDecimal(b));
+
+    //Updating the calculator area
+    $("#modalPrompt").text("Input a Mean Temp. Value (Fahrenheit)");
 
 
     //Updating the d3 graph appropriately 
@@ -441,6 +449,9 @@ function d3update( data , from_month, from_year, to_month, to_year ){
         $("#linRegB").text("b = " + cutoffDecimal(b));
         $("#linRegEquation").text("y = " + cutoffDecimal(m) + "x + " + cutoffDecimal(b));
 
+        //Updating the calculator area
+        $("#modalPrompt").text("Input a Mean Humidity Value (%)");
+
         svg = d3.select("#graph").transition();
         svg.select(".weatherAxis") // change the left y axis domain
             .duration(750)
@@ -484,6 +495,9 @@ function d3update( data , from_month, from_year, to_month, to_year ){
         $("#linRegB").text("b = " + cutoffDecimal(b));
         $("#linRegEquation").text("y = " + cutoffDecimal(m) + "x + " + cutoffDecimal(b));
 
+        //Updating the calculator area
+        $("#modalPrompt").text("Input a Mean Precipitation Value (Inches)");
+
         svg = d3.select("#graph").transition();
         svg.select(".weatherAxis") // change the left y axis domain
             .duration(750)
@@ -525,6 +539,9 @@ function d3update( data , from_month, from_year, to_month, to_year ){
         $("#linRegM").text("m = " + cutoffDecimal(m));
         $("#linRegB").text("b = " + cutoffDecimal(b));
         $("#linRegEquation").text("y = " + cutoffDecimal(m) + "x + " + cutoffDecimal(b));
+
+        //Updating the calculator area
+        $("#modalPrompt").text("Input a Mean Temp. Value (Fahrenheit)");
         
         svg = d3.select("#graph").transition();
         svg.select(".weatherAxis") // change the left y axis domain
@@ -542,6 +559,13 @@ function d3update( data , from_month, from_year, to_month, to_year ){
             .duration(750)
             .attr("d", line1(meanTempData));
     });
+    
+
+    //Creating the calculator values
+    $("#calcButton").click(function(){
+        var inputVal = $("#weatherInputValue").val();
+        $("#calcOutput").text("$" + cutoffDecimal(line(inputVal)));
+    })
 
 }
 

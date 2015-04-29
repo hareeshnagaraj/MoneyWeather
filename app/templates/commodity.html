@@ -70,6 +70,10 @@
       </style>
 </head>
 <body>
+
+
+
+
   <nav class="green" role="navigation">
     <div class="nav-wrapper container">
       <a id="logo-container" href="#" class="brand-logo">
@@ -219,8 +223,26 @@
         <h5 id="linRegTitle">Simple Linear Regression: x=weather, y=price</h5>
           <div id="linRegM"></div>
           <div id="linRegB"></div>
-          <div id="linRegEquation"></div>
+          <div id="linRegEquation"></div><br>
+          <button  id="modalButton" data-target="modal1" class="btn green modal-trigger">Input Weather Values</button>
       </div>
+    </div>
+  </div>
+
+   <!-- Linear Regression Calculator Modal -->
+  <div id="modal1" class="modal">
+    <div class="modal-content">
+      <h4 id="modalPrompt">Input a weather value</h4>
+      <br>
+      <div class="input-field col s6">
+          <input placeholder="Value" id="weatherInputValue" type="text" class="validate">
+      </div>
+      <br>
+      <button id="calcButton" class="btn green">Calculate!</button>
+      <h5>Resulting Linear Regression price: <section id="calcOutput">n/a</section></h5>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Done</a>
     </div>
   </div>
 
@@ -242,6 +264,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/js/materialize.min.js"></script>
   <script src="http://mbostock.github.com/d3/d3.v2.js"></script>
   <script src="{{ url_for('static', filename='js/simple_statistics.js') }}"></script>
+
   
   {% block UIComponent %}
   {% endblock %}

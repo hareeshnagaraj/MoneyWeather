@@ -42,10 +42,10 @@
 
             // Store data length in a local variable to reduce
             // repeated object property lookups
-            console.log("in function mb")
-            console.log(data)
+            // console.log("in function mb")
+            // console.log(data)
             var data_length = data.length;
-            console.log(data_length)
+            // console.log(data_length)
 
             //if there's only one point, arbitrarily choose a slope of 0
             //and a y-intercept of whatever the y of the initial point is

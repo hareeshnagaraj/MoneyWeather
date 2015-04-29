@@ -23,7 +23,7 @@ var y1 = d3.scale.linear().domain([0, 10]).range([h, 0]); // in real world the d
 var y2 = d3.scale.linear().domain([0, 700]).range([h, 0]);  // in real world the domain would be dynamically calculated from the data
     // automatically determining max range can work something like this
     // var y = d3.scale.linear().domain([0, d3.max(data)]).range([h, 0]);
-
+var priceLog = data2;
 // create a line function that can convert data[] into x and y points
 var line1 = d3.svg.line()
     // assign the X function to plot our line as we wish
@@ -56,7 +56,6 @@ var line2 = d3.svg.line()
         return y2(d); 
     })
 
-
     // Add an SVG element with the desired dimensions and margin.
     var graph = d3.select("#graph").append("svg:svg")
           .attr("width", w + m[1] + m[3])
@@ -75,6 +74,7 @@ var line2 = d3.svg.line()
 
     // create left yAxis
     var yAxisLeft = d3.svg.axis().scale(y1).ticks(4).orient("left");
+
     // Add the y-axis to the left
     graph.append("svg:g")
           .attr("class", "y axis axisLeft")
@@ -88,6 +88,7 @@ var line2 = d3.svg.line()
           .attr("class", "y axis axisRight")
           .attr("transform", "translate(" + (w+15) + ",0)")
           .call(yAxisRight);
+
     
     // add lines
     // do this AFTER the axes above so that the line is above the tick-lines
@@ -236,13 +237,18 @@ function d3update( data , from_month, from_year, to_month, to_year ){
     var meanPrecipData = [];
     var meanHumidityData = [];
     var priceDataPoints = [];
+    var logPriceDataPoints = [];
     var temp, precipitation, humidity, month, year;
+    var priceStandardDeviation, priceMean, priceVariance;
+    var weatherStandardDeviation, weatherMean, weatherVariance;
 
     var maxMeanTemp = 0;
     var maxMeanPrecip = 0;
     var maxMeanHumidity = 0;
     var maxPrice = -1;
+    var maxLogPrice = -1;
     var minPrice = 9007199254740992;        //Largest possible number in JS
+    var minLogPrice = 9007199254740992;
     var minMeanTemp = 9007199254740992;
     var minMeanPrecip = 9007199254740992;
     var minMeanHumidity = 9007199254740992;
@@ -303,21 +309,49 @@ function d3update( data , from_month, from_year, to_month, to_year ){
         // console.log(commodityPrice[i])
         pricePoint = commodityPrice[i];
         price = cutoffDecimal(pricePoint[0]);
+        logPrice = Math.log(pricePoint[0]);
         month = pricePoint[1];
         year = pricePoint[2];
         if(year == to_year && month > to_month){ break; }
         if((year == from_year && month >= from_month) || (year > from_year)){
             if(+maxPrice < +price){         // NOTE : + operator converts to ints
                 maxPrice = price            //updating maximum price for right y axis
-                // console.log("maxPrice : " + maxPrice)
             }
             if(+minPrice > +price){
-                // console.log("minPrice update from : " + minPrice + " to " + price)
                 minPrice = price            //updating maximum price for right y axis
             }
+            if(+maxLogPrice < +logPrice){         // NOTE : + operator converts to ints
+                maxLogPrice = logPrice            //updating maximum price for right y axis
+            }
+            if(+minLogPrice > +logPrice){
+                minLogPrice = logPrice            //updating maximum price for right y axis
+            }
             priceDataPoints.push(price);
+            logPriceDataPoints.push(logPrice);
         }
     }
+    // console.log(logPriceDataPoints);
+    // console.log(minLogPrice);
+    // console.log(maxLogPrice);
+
+    //Updating the basic descrpitive statistics
+    priceStandardDeviation = ss.standard_deviation(priceDataPoints);
+    priceMean = ss.mean(priceDataPoints);
+    priceVariance = ss.variance(priceDataPoints);
+    weatherStandardDeviation = ss.standard_deviation(meanTempData);
+    weatherMean = ss.mean(meanTempData);
+    weatherVariance = ss.variance(meanTempData)
+
+    //Updating the UI with the descriptive stats
+    $("#priceStats").show();
+    $("#priceMean").text("Mean : " + cutoffDecimal(priceMean));
+    $("#priceStandardDev").text("Standard Deviation : " + cutoffDecimal(priceStandardDeviation));
+    $("#priceVariance").text("Variance : " + cutoffDecimal(priceVariance));
+    $("#weatherStatsTitle").text("Descriptive Mean Temp. Statistics:");
+    $("#weatherMean").text("Mean : " + cutoffDecimal(weatherMean));
+    $("#weatherStandardDev").text("Standard Deviation : " + cutoffDecimal(weatherStandardDeviation));
+    $("#weatherVariance").text("Variance : " + cutoffDecimal(weatherVariance));
+
 
 
     //Updating the d3 graph appropriately 
@@ -361,15 +395,39 @@ function d3update( data , from_month, from_year, to_month, to_year ){
     $("#meanprecip").unbind("click");
     $("#meanhumidity").unbind("click");
     $("#meantemp").unbind("click");
+    $("#logpricebutton").unbind("click");
 
     //Enabling precip, humidity buttons
     $("#meanprecip").removeClass("disabled");
     $("#meanhumidity").removeClass("disabled");
+    $("#logpricebutton").removeClass("disabled");
     $("#meanprecip").addClass("green");
     $("#meanhumidity").addClass("green");
+    $("#logpricebutton").addClass("green");
 
 
     //click handlers to switch data and button colors
+
+    //Adding the logarithm of the price
+    $("#logpricebutton").click(function(){
+        // svg = d3.select("#graph").transition();
+        // svg.select(".priceAxisLabel") // change the left y axis domain
+        //     .duration(750)
+        //     .text("Log(Price)");
+
+        // y2 = d3.scale.linear().domain([minLogPrice, maxLogPrice]).range([h, 0]);      //updating the left axis with meantemp
+        // yAxisRight = d3.svg.axis().scale(y2).ticks(10).orient("left");
+
+        // svg.select(".y.axis.axisRight") // change the left y axis domain
+        //     .duration(750)
+        //     .call(yAxisRight);
+
+        // svg.select(".data2") // change the left y axis domain
+        //     .duration(750)
+        //     .attr("d", line2(logPriceDataPoints));
+    });
+
+
     $("#meanhumidity").click(function(){
         $("#meanhumidity").removeClass("green");
         $("#meanhumidity").addClass("disabled");
@@ -377,6 +435,14 @@ function d3update( data , from_month, from_year, to_month, to_year ){
         $("#meanprecip").addClass("green");
         $("#meantemp").removeClass("disabled");
         $("#meantemp").addClass("green");
+
+        weatherStandardDeviation = ss.standard_deviation(meanHumidityData);
+        weatherMean = ss.mean(meanHumidityData);
+        weatherVariance = ss.variance(meanHumidityData);
+        $("#weatherStatsTitle").text("Descriptive Mean Humidity. Statistics:");
+        $("#weatherMean").text("Mean : " + cutoffDecimal(weatherMean));
+        $("#weatherStandardDev").text("Standard Deviation : " + cutoffDecimal(weatherStandardDeviation));
+        $("#weatherVariance").text("Variance : " + cutoffDecimal(weatherVariance));
 
         svg = d3.select("#graph").transition();
         svg.select(".weatherAxis") // change the left y axis domain
@@ -395,6 +461,7 @@ function d3update( data , from_month, from_year, to_month, to_year ){
             .attr("d", line1(meanHumidityData));
     });
 
+
     $("#meanprecip").click(function(){
         $("#meanprecip").removeClass("green");
         $("#meanprecip").addClass("disabled");
@@ -402,6 +469,14 @@ function d3update( data , from_month, from_year, to_month, to_year ){
         $("#meanhumidity").addClass("green");
         $("#meantemp").removeClass("disabled");
         $("#meantemp").addClass("green");
+
+        weatherStandardDeviation = ss.standard_deviation(meanPrecipData);
+        weatherMean = ss.mean(meanPrecipData);
+        weatherVariance = ss.variance(meanPrecipData);
+        $("#weatherStatsTitle").text("Descriptive Mean Precip. Statistics:");
+        $("#weatherMean").text("Mean : " + cutoffDecimal(weatherMean));
+        $("#weatherStandardDev").text("Standard Deviation : " + cutoffDecimal(weatherStandardDeviation));
+        $("#weatherVariance").text("Variance : " + cutoffDecimal(weatherVariance));
 
         svg = d3.select("#graph").transition();
         svg.select(".weatherAxis") // change the left y axis domain
@@ -427,6 +502,14 @@ function d3update( data , from_month, from_year, to_month, to_year ){
         $("#meanhumidity").addClass("green");
         $("#meanprecip").removeClass("disabled");
         $("#meanprecip").addClass("green");
+
+        weatherStandardDeviation = ss.standard_deviation(meanTempData);
+        weatherMean = ss.mean(meanTempData);
+        weatherVariance = ss.variance(meanTempData);
+        $("#weatherStatsTitle").text("Descriptive Mean Temp. Statistics:");
+        $("#weatherMean").text("Mean : " + cutoffDecimal(weatherMean));
+        $("#weatherStandardDev").text("Standard Deviation : " + cutoffDecimal(weatherStandardDeviation));
+        $("#weatherVariance").text("Variance : " + cutoffDecimal(weatherVariance));
         
         svg = d3.select("#graph").transition();
         svg.select(".weatherAxis") // change the left y axis domain

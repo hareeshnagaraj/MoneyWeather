@@ -61,6 +61,9 @@
       #descriptionContainer{
         display: none;
       }
+      #priceStats{
+        display: none;
+      }
       </style>
 </head>
 <body>
@@ -176,6 +179,7 @@
         <a id="meantemp" class="waves-effect waves-light btn disabled">Mean Temperature</a>
         <a id="meanprecip" class="waves-effect waves-light btn disabled">Mean Precipitation</a>
         <a id="meanhumidity" class="waves-effect waves-light btn disabled">Mean Humidity</a>
+        <a id="logpricebutton" class="waves-effect waves-light btn disabled">Log(Price)</a>
       </div>
 
       </div>
@@ -191,6 +195,20 @@
     <div class="col-md-4">
       <div class="row">
         <h5>Geographical Location: <div id="dataLocation"></div></h5>
+      </div>
+    </div>
+    <div id="priceStats" class="col-md-4">
+      <div class="row">
+        <h5>Descriptive Price Statistics: </h5>
+          <div id="priceMean"></div>
+          <div id="priceStandardDev"></div>
+          <div id="priceVariance"></div>
+      </div>
+      <div class="row">
+        <h5 id="weatherStatsTitle">Descriptive Statistics: </h5>
+          <div id="weatherMean"></div>
+          <div id="weatherStandardDev"></div>
+          <div id="weatherVariance"></div>
       </div>
     </div>
   </div>
@@ -212,6 +230,7 @@
   <!-- Compiled and minified JavaScript -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/js/materialize.min.js"></script>
   <script src="http://mbostock.github.com/d3/d3.v2.js"></script>
+  <script src="{{ url_for('static', filename='js/simple_statistics.js') }}"></script>
   
   {% block UIComponent %}
   {% endblock %}

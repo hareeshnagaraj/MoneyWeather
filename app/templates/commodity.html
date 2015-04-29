@@ -238,16 +238,22 @@
   </div>
 
    <!-- Linear Regression Calculator Modal -->
-  <div id="modal1" class="modal">
+  <div id="modal1" class="modal" style="max-height:90%;">
     <div class="modal-content">
-      <h4 id="modalPrompt">Input a weather value</h4>
-      <br>
+      <h5 id="modalPrompt">Input a weather value</h5>
       <div class="input-field col s6">
-          <input placeholder="Value" id="weatherInputValue" type="text" class="validate">
+          <input placeholder="Weather Value" id="weatherInputValue" type="text" class="validate">
       </div>
-      <br>
       <button id="calcButton" class="btn green">Calculate!</button>
       <h5>Resulting Linear Regression price: <section id="calcOutput">n/a</section></h5>
+      <br>
+      <h5 id="modalPrompt2">Input weather and time value</h5>
+      <div class="input-field col s6">
+          <input placeholder="Weather Value" id="multWeatherVal" type="text" class="validate">
+          <input placeholder="Time Value in Months From Start" id="multTimeVal" type="text" class="validate">
+      </div>
+      <button id="calcButton2" class="btn green">Calculate!</button>
+      <h5>Resulting Multiple Regression price: <section id="multCalcOutput">n/a</section></h5>
     </div>
     <div class="modal-footer">
       <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Done</a>

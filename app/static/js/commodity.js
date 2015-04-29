@@ -567,7 +567,12 @@ function d3update( data , from_month, from_year, to_month, to_year ){
 
     //Creating the calculator values
     $("#calcButton").click(function(){
-        var inputVal = $("#weatherInputValue").val();
+        var inputVal = +$("#weatherInputValue").val();
+        console.log(inputVal);
+        if(inputVal.toString() == "NaN"){
+            window.alert("please enter a valid number");
+            return ;
+        }
         $("#calcOutput").text("$" + cutoffDecimal(line(inputVal)));
     })
 

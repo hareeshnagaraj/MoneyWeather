@@ -31,6 +31,7 @@
         linreg.data = function(x) {
             if (!arguments.length) return data;
             data = x.slice();
+
             return linreg;
         };
 
@@ -41,7 +42,10 @@
 
             // Store data length in a local variable to reduce
             // repeated object property lookups
+            console.log("in function mb")
+            console.log(data)
             var data_length = data.length;
+            console.log(data_length)
 
             //if there's only one point, arbitrarily choose a slope of 0
             //and a y-intercept of whatever the y of the initial point is
@@ -63,10 +67,14 @@
                 // value.
                 //
                 // In math notation, these would be SS_x, SS_y, SS_xx, and SS_xy
+                // console.log(data[0])
                 for (var i = 0; i < data_length; i++) {
-                    point = data[i];
-                    x = point[0];
-                    y = point[1];
+                    point = (data[i]);
+                    x = (+point[0]);
+                    y = (+point[1]);
+                    // console.log(point)
+                    // console.log("x :" + x);
+                    // console.log("y :" + y);
 
                     sum_x += x;
                     sum_y += y;
@@ -74,6 +82,8 @@
                     sum_xx += x * x;
                     sum_xy += x * y;
                 }
+
+                // console.log("sum_x :" + sum_x);
 
                 // `m` is the slope of the regression line
                 m = ((data_length * sum_xy) - (sum_x * sum_y)) /

@@ -241,6 +241,7 @@ function d3update( data , from_month, from_year, to_month, to_year ){
     var temp, precipitation, humidity, month, year;
     var priceStandardDeviation, priceMean, priceVariance;
     var weatherStandardDeviation, weatherMean, weatherVariance;
+    var linRegression, m, b, line;
 
     var maxMeanTemp = 0;
     var maxMeanPrecip = 0;
@@ -330,9 +331,6 @@ function d3update( data , from_month, from_year, to_month, to_year ){
             logPriceDataPoints.push(logPrice);
         }
     }
-    // console.log(logPriceDataPoints);
-    // console.log(minLogPrice);
-    // console.log(maxLogPrice);
 
     //Updating the basic descrpitive statistics
     priceStandardDeviation = ss.standard_deviation(priceDataPoints);
@@ -352,6 +350,18 @@ function d3update( data , from_month, from_year, to_month, to_year ){
     $("#weatherStandardDev").text("Standard Deviation : " + cutoffDecimal(weatherStandardDeviation));
     $("#weatherVariance").text("Variance : " + cutoffDecimal(weatherVariance));
 
+    //Performing a linear regression on the two variables
+    //First, creating the data set appropriately
+
+
+    linRegression = regressionLine(meanTempData,priceDataPoints);
+    m = linRegression.m();
+    b = linRegression.b();
+    line = linRegression.line();
+    $("#linRegTitle").show();
+    $("#linRegM").text("m = " + cutoffDecimal(m));
+    $("#linRegB").text("b = " + cutoffDecimal(b));
+    $("#linRegEquation").text("y = " + cutoffDecimal(m) + "x + " + cutoffDecimal(b));
 
 
     //Updating the d3 graph appropriately 
@@ -406,28 +416,6 @@ function d3update( data , from_month, from_year, to_month, to_year ){
     $("#logpricebutton").addClass("green");
 
 
-    //click handlers to switch data and button colors
-
-    //Adding the logarithm of the price
-    $("#logpricebutton").click(function(){
-        // svg = d3.select("#graph").transition();
-        // svg.select(".priceAxisLabel") // change the left y axis domain
-        //     .duration(750)
-        //     .text("Log(Price)");
-
-        // y2 = d3.scale.linear().domain([minLogPrice, maxLogPrice]).range([h, 0]);      //updating the left axis with meantemp
-        // yAxisRight = d3.svg.axis().scale(y2).ticks(10).orient("left");
-
-        // svg.select(".y.axis.axisRight") // change the left y axis domain
-        //     .duration(750)
-        //     .call(yAxisRight);
-
-        // svg.select(".data2") // change the left y axis domain
-        //     .duration(750)
-        //     .attr("d", line2(logPriceDataPoints));
-    });
-
-
     $("#meanhumidity").click(function(){
         $("#meanhumidity").removeClass("green");
         $("#meanhumidity").addClass("disabled");
@@ -443,6 +431,15 @@ function d3update( data , from_month, from_year, to_month, to_year ){
         $("#weatherMean").text("Mean : " + cutoffDecimal(weatherMean));
         $("#weatherStandardDev").text("Standard Deviation : " + cutoffDecimal(weatherStandardDeviation));
         $("#weatherVariance").text("Variance : " + cutoffDecimal(weatherVariance));
+
+        linRegression = regressionLine(meanHumidityData,priceDataPoints);
+        m = linRegression.m();
+        b = linRegression.b();
+        line = linRegression.line();
+        $("#linRegTitle").show();
+        $("#linRegM").text("m = " + cutoffDecimal(m));
+        $("#linRegB").text("b = " + cutoffDecimal(b));
+        $("#linRegEquation").text("y = " + cutoffDecimal(m) + "x + " + cutoffDecimal(b));
 
         svg = d3.select("#graph").transition();
         svg.select(".weatherAxis") // change the left y axis domain
@@ -478,6 +475,15 @@ function d3update( data , from_month, from_year, to_month, to_year ){
         $("#weatherStandardDev").text("Standard Deviation : " + cutoffDecimal(weatherStandardDeviation));
         $("#weatherVariance").text("Variance : " + cutoffDecimal(weatherVariance));
 
+        linRegression = regressionLine(meanPrecipData,priceDataPoints);
+        m = linRegression.m();
+        b = linRegression.b();
+        line = linRegression.line();
+        $("#linRegTitle").show();
+        $("#linRegM").text("m = " + cutoffDecimal(m));
+        $("#linRegB").text("b = " + cutoffDecimal(b));
+        $("#linRegEquation").text("y = " + cutoffDecimal(m) + "x + " + cutoffDecimal(b));
+
         svg = d3.select("#graph").transition();
         svg.select(".weatherAxis") // change the left y axis domain
             .duration(750)
@@ -510,6 +516,15 @@ function d3update( data , from_month, from_year, to_month, to_year ){
         $("#weatherMean").text("Mean : " + cutoffDecimal(weatherMean));
         $("#weatherStandardDev").text("Standard Deviation : " + cutoffDecimal(weatherStandardDeviation));
         $("#weatherVariance").text("Variance : " + cutoffDecimal(weatherVariance));
+
+        linRegression = regressionLine(meanTempData,priceDataPoints);
+        m = linRegression.m();
+        b = linRegression.b();
+        line = linRegression.line();
+        $("#linRegTitle").show();
+        $("#linRegM").text("m = " + cutoffDecimal(m));
+        $("#linRegB").text("b = " + cutoffDecimal(b));
+        $("#linRegEquation").text("y = " + cutoffDecimal(m) + "x + " + cutoffDecimal(b));
         
         svg = d3.select("#graph").transition();
         svg.select(".weatherAxis") // change the left y axis domain
@@ -528,6 +543,17 @@ function d3update( data , from_month, from_year, to_month, to_year ){
             .attr("d", line1(meanTempData));
     });
 
+}
+
+function regressionLine(xData, yData){
+    var regInput = [];
+    var regPoint;
+    for(var i = 0; i < xData.length; i++){
+        regPoint = [xData[i], yData[i]];
+        regInput.push(regPoint);
+    }
+    var regression = ss.linear_regression().data(regInput);
+    return regression;
 }
 
 function cutoffDecimal(figure, decimals){

@@ -187,13 +187,21 @@ console.log(y.regression_coefficients(x));
 // console.log(y.regression_coefficients(x));
 //console.log();
  
-// // the Tcl example
-y = new ColumnVector([
-    52.21, 53.12, 54.48, 55.84, 57.20, 58.57, 59.93, 61.29, 63.11, 64.47, 66.28, 68.10, 69.92, 72.19, 74.46
-]);
-x = new Matrix(
-    [1.47,1.50,1.52,1.55,1.57,1.60,1.63,1.65,1.68,1.70,1.73,1.75,1.78,1.80,1.83].map(
-        function(v) {return [Math.pow(v,0), Math.pow(v,1), Math.pow(v,2), Math.pow(v,3)]}
-    )
-);
+//the Tcl example
+//OKAY, so number of entries in y must match # arrays in x
+//that seems really simple...
+// y = new ColumnVector([
+//     52.21, 53.12, 54.48, 55.84, 57.20, 58.57, 59.93, 61.29, 63.11, 64.47, 66.28, 68.10, 69.92, 72.19, 74.46
+// ]);
+// x = new Matrix(
+//     [1.47,1.50,1.52,1.55,1.57,1.60,1.63,1.65,1.68,1.70,1.73,1.75,1.78,1.80,1.83].map(
+//         function(v) {return [Math.pow(v,0), Math.pow(v,1), Math.pow(v,2), Math.pow(v,3)]}
+//     )
+// );
+
+//So, lets' say X is 2 independent variables
+// x = new Matrix(
+//     [[1.47,1.50],[1.47,1.50]]
+// );
+
 console.log(y.regression_coefficients(x));

@@ -144,8 +144,9 @@
         // _total sum of squares_
         var sum = 0, average;
         for (var i = 0; i < data.length; i++) {
-            sum += data[i][1];
+            sum += (+data[i][1]);
         }
+        console.log(sum);
         average = sum / data.length;
 
         // Compute the total sum of squares - the

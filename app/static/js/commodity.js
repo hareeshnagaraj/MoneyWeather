@@ -249,7 +249,7 @@ function d3update( data , from_month, from_year, to_month, to_year ){
     var temp, precipitation, humidity, month, year;
     var priceStandardDeviation, priceMean, priceVariance;
     var weatherStandardDeviation, weatherMean, weatherVariance;
-    var linRegression, m, b, line;
+    var linRegression, m, b, line, r_squared;
 
     var maxMeanTemp = 0;
     var maxMeanPrecip = 0;
@@ -363,10 +363,18 @@ function d3update( data , from_month, from_year, to_month, to_year ){
     m = linRegression.m();
     b = linRegression.b();
     line = linRegression.line();
+    r_squared = ss.r_squared(getDataPairs(meanTempData,priceDataPoints), 
+                                            function(x) { 
+                                                return m*x + b ;
+                                            });
+    console.log("rsquared");
+    console.log(r_squared);
+
     $("#linRegTitle").show();
     $("#linRegM").text("m = " + cutoffDecimal(m));
     $("#linRegB").text("b = " + cutoffDecimal(b));
     $("#linRegEquation").text("y = " + cutoffDecimal(m) + "x + " + cutoffDecimal(b));
+    $("#linRSquared").text("r^2 = " + cutoffDecimal(r_squared));
 
     //Updating the calculator area
     $("#modalPrompt").text("Input a Mean Temp. Value (Fahrenheit)");
@@ -445,11 +453,15 @@ function d3update( data , from_month, from_year, to_month, to_year ){
         m = linRegression.m();
         b = linRegression.b();
         line = linRegression.line();
+        r_squared = ss.r_squared(getDataPairs(meanHumidityData,priceDataPoints), 
+                                            function(x) { 
+                                                return m*x + b ;
+                                            });
         $("#linRegTitle").show();
         $("#linRegM").text("m = " + cutoffDecimal(m));
         $("#linRegB").text("b = " + cutoffDecimal(b));
         $("#linRegEquation").text("y = " + cutoffDecimal(m) + "x + " + cutoffDecimal(b));
-
+        $("#linRSquared").text("r^2 = " + cutoffDecimal(r_squared,4));
         //Updating the calculator area
         $("#modalPrompt").text("Input a Mean Humidity Value (%)");
         $("#modalButton").text("Input Humidity Values");
@@ -492,10 +504,15 @@ function d3update( data , from_month, from_year, to_month, to_year ){
         m = linRegression.m();
         b = linRegression.b();
         line = linRegression.line();
+        r_squared = ss.r_squared(getDataPairs(meanPrecipData,priceDataPoints), 
+                                            function(x) { 
+                                                return m*x + b ;
+                                            });
         $("#linRegTitle").show();
         $("#linRegM").text("m = " + cutoffDecimal(m));
         $("#linRegB").text("b = " + cutoffDecimal(b));
         $("#linRegEquation").text("y = " + cutoffDecimal(m) + "x + " + cutoffDecimal(b));
+        $("#linRSquared").text("r^2 = " + cutoffDecimal(r_squared,4));
 
         //Updating the calculator area
         $("#modalPrompt").text("Input a Mean Precipitation Value (Inches)");
@@ -538,10 +555,15 @@ function d3update( data , from_month, from_year, to_month, to_year ){
         m = linRegression.m();
         b = linRegression.b();
         line = linRegression.line();
+        r_squared = ss.r_squared(getDataPairs(meanTempData,priceDataPoints), 
+                                            function(x) { 
+                                                return m*x + b ;
+                                            });
         $("#linRegTitle").show();
         $("#linRegM").text("m = " + cutoffDecimal(m));
         $("#linRegB").text("b = " + cutoffDecimal(b));
         $("#linRegEquation").text("y = " + cutoffDecimal(m) + "x + " + cutoffDecimal(b));
+        $("#linRSquared").text("r^2 = " + cutoffDecimal(r_squared,4));
 
         //Updating the calculator area
         $("#modalPrompt").text("Input a Mean Temp. Value (Fahrenheit)");
@@ -574,8 +596,18 @@ function d3update( data , from_month, from_year, to_month, to_year ){
             return ;
         }
         $("#calcOutput").text("$" + cutoffDecimal(line(inputVal)));
-    })
+    });
 
+}
+
+function getDataPairs(xData, yData){
+    var regInput = [];
+    var regPoint;
+    for(var i = 0; i < xData.length; i++){
+        regPoint = [xData[i], yData[i]];
+        regInput.push(regPoint);
+    }
+    return regInput;
 }
 
 function regressionLine(xData, yData){

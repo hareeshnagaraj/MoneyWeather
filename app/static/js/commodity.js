@@ -64,7 +64,7 @@ var line2 = d3.svg.line()
           .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
     // create yAxis
-    var xAxis = d3.svg.axis().scale(x).tickSize(-h).tickSubdivide(false);
+    var xAxis = d3.svg.axis().scale(x).tickSize(-h).tickSubdivide(true);
     // Add the x-axis.
     graph.append("svg:g")
           .attr("class", "x axis")

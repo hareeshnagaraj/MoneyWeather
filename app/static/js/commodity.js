@@ -347,7 +347,7 @@ function d3update( data , from_month, from_year, to_month, to_year ){
     weatherStandardDeviation = ss.standard_deviation(meanTempData);
     weatherMean = ss.mean(meanTempData);
     weatherVariance = ss.variance(meanTempData)
-    regval = getMultipleRegEquationValues(meanTempData, priceDataPoints);
+    regval = getMultipleRegEquationValues(meanTempData, meanPrecipData, meanHumidityData, priceDataPoints);
     
     
     //Updating the UI with the descriptive stats
@@ -362,11 +362,13 @@ function d3update( data , from_month, from_year, to_month, to_year ){
     
     beta1 = cutoffDecimal(regval['beta1'],5);
     beta2 = cutoffDecimal(regval['beta2'],5);
+    beta3 = cutoffDecimal(regval['beta3'],5);
     error = cutoffDecimal(regval['error'],5);
     $("#multRegBeta1").text("Beta 1 : " + beta1);
     $("#multRegBeta2").text("Beta 2 : " + beta2);
+    $("#multRegBeta3").text("Beta 3 : " + beta3);
     $("#multRegError").text("Error : " + error);
-    $("#multRegEquation").text("y = " + beta1 +"x1 + " + beta2 + "x2 + " + error);
+    $("#multRegEquation").text("y = " + beta1 +"x1 + " + beta2 + "x2 + " + beta3 + "x3 + " + error);
 
     //Performing a linear regression on the two variables   
     linRegression = regressionLine(meanTempData,priceDataPoints);
@@ -473,14 +475,6 @@ function d3update( data , from_month, from_year, to_month, to_year ){
                                             function(x) { 
                                                 return m*x + b ;
                                             });
-        regval = getMultipleRegEquationValues(meanHumidityData, priceDataPoints);
-        beta1 = cutoffDecimal(regval['beta1'],5);
-        beta2 = cutoffDecimal(regval['beta2'],5);
-        error = cutoffDecimal(regval['error'],5);
-        $("#multRegBeta1").text("Beta 1 : " + beta1);
-        $("#multRegBeta2").text("Beta 2 : " + beta2);
-        $("#multRegError").text("Error : " + error);
-        $("#multRegEquation").text("y = " + beta1 +"x1 + " + beta2 + "x2 + " + error);
 
         $("#linRegTitle").show();
         $("#linRegM").text("m = " + cutoffDecimal(m));
@@ -533,15 +527,6 @@ function d3update( data , from_month, from_year, to_month, to_year ){
                                             function(x) { 
                                                 return m*x + b ;
                                             });
-        regval = getMultipleRegEquationValues(meanPrecipData, priceDataPoints);
-        beta1 = cutoffDecimal(regval['beta1'],5);
-        beta2 = cutoffDecimal(regval['beta2'],5);
-        error = cutoffDecimal(regval['error'],5);
-        $("#multRegBeta1").text("Beta 1 : " + beta1);
-        $("#multRegBeta2").text("Beta 2 : " + beta2);
-        $("#multRegError").text("Error : " + error);
-        $("#multRegEquation").text("y = " + beta1 +"x1 + " + beta2 + "x2 + " + error);
-
         $("#linRegTitle").show();
         $("#linRegM").text("m = " + cutoffDecimal(m));
         $("#linRegB").text("b = " + cutoffDecimal(b));
@@ -593,14 +578,6 @@ function d3update( data , from_month, from_year, to_month, to_year ){
                                             function(x) { 
                                                 return m*x + b ;
                                             });
-        regval = getMultipleRegEquationValues(meanTempData, priceDataPoints);
-        beta1 = cutoffDecimal(regval['beta1'],5);
-        beta2 = cutoffDecimal(regval['beta2'],5);
-        error = cutoffDecimal(regval['error'],5);
-        $("#multRegBeta1").text("Beta 1 : " + beta1);
-        $("#multRegBeta2").text("Beta 2 : " + beta2);
-        $("#multRegError").text("Error : " + error);
-        $("#multRegEquation").text("y = " + beta1 +"x1 + " + beta2 + "x2 + " + error);
 
         $("#linRegTitle").show();
         $("#linRegM").text("m = " + cutoffDecimal(m));
@@ -657,22 +634,28 @@ function d3update( data , from_month, from_year, to_month, to_year ){
 }
 
 //Example usage : getMultipleRegEquationValues(meanTempData, priceDataPoints)
-function getMultipleRegEquationValues(data1, data2){
+//NOTE : Fix this by changing the values 
+//TODO : BREAK UP X1, X2, X3 AS INDEPENDENT VARIABLES
+//       X1 = TEMP, X2 = PRECIP, X3 = HUMIDITY
+function getMultipleRegEquationValues(data1, data2, data3, data4){
     var returnValues = {};
-    var xMatrix = new Matrix(getMultRegDataPairs(data1));
-    var yMatrix = new Matrix(getMultRegYValues(data2));
+    console.log(data3);
+    var xMatrix = new Matrix(getMultRegDataTriples(data1, data2, data3));
+    var yMatrix = new Matrix(getMultRegYValues(data4));
     var errorValues = [];
     console.log(xMatrix);
     console.log(yMatrix);
     var coefficients = yMatrix.regression_coefficients(xMatrix)['mtx'];
-    // console.log(coefficients);
+    console.log(coefficients);
     var beta1 = coefficients[0][0];
     var beta2 = coefficients[1][0];
+    var beta3 = coefficients[2][0];
     var errArray = [];
     var error;
     // console.log(beta1 + " " + beta2);
     returnValues['beta1'] = beta1;
     returnValues['beta2'] = beta2;
+    returnValues['beta3'] = beta3;
     for(var i = 0; i < data2.length; i++){
         error = data2[i] - beta1*data1[i] - beta2*i;
         errArray.push(error);
@@ -692,11 +675,11 @@ function getMultRegYValues(data){
     return regInput;
 }
 
-function getMultRegDataPairs(data){
+function getMultRegDataTriples(data1, data2, data3){
     var regInput = [];
     var regPoint;
-    for(var i = 0; i < data.length; i++){
-        regPoint = [data[i], i];
+    for(var i = 0; i < data1.length; i++){
+        regPoint = [data1[i], data2[i], data3[i]];
         regInput.push(regPoint);
     }
     return regInput;

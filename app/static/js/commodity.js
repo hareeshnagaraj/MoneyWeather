@@ -618,18 +618,20 @@ function d3update( data , from_month, from_year, to_month, to_year ){
         $("#calcOutput").text("$" + cutoffDecimal(line(inputVal)));
     });
     $("#calcButton2").click(function(){
-        var weatherInput = +$("#multWeatherVal").val();
-        var timeInput = +$("#multTimeVal").val();
-        if(weatherInput.toString() == "NaN" || timeInput.toString() == "NaN"){
+        var tempVal = +$("#multWeatherVal").val();
+        var precipVal = +$("#multPrecipVal").val();
+        var humidityVal = +$("#multHumidityVal").val();
+        
+        if(tempVal.toString() == "NaN" || precipVal.toString() == "NaN"){
             window.alert("please enter a valid number");
             return ;
         }
         console.log('calc2 finding');
-        console.log(beta1 * weatherInput);
-        console.log(beta2 * timeInput);
-        console.log()
-        var yValue = (+beta1) * weatherInput + (+beta2) * timeInput + (+error);
-        $("#multCalcOutput").text("$" + cutoffDecimal(yValue));
+        console.log(beta1 * tempVal);
+        console.log(beta2 * precipVal);
+        console.log(beta3 * humidityVal)
+        var yValue = (+beta1) * tempVal + (+beta2) * precipVal + (+beta3) * humidityVal + (+error);
+        $("#multCalcOutput").text("$" + cutoffDecimal(priceMean + yValue));
     });
 }
 
@@ -661,7 +663,7 @@ function getMultipleRegEquationValues(data1, data2, data3, data4){
         errArray.push(error);
     }
     // console.log(ss.mean(errArray));
-    returnValues['error'] = ss.mean(errArray);
+    returnValues['error'] = ss.mean(errArray)/data2.length;
     return returnValues
 }
 
